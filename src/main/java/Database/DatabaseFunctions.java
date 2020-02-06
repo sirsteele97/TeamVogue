@@ -1,12 +1,12 @@
 package Database;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
 
 import java.sql.*;
 import java.util.List;
 
 public class DatabaseFunctions {
 
-    private static String ConnectionName = "\"jdbc:mysql://localhost:3306/TeamVogue\",\"root\",\"TeamVogue1\"";
+    private static String ConnectionName = "\"jdbc:mysql://198.187.29.149:3306/TeamVogue\",\"root\",\"TeamVogue1\"";
 
     public static class DBImages{
 
@@ -75,7 +75,7 @@ public class DatabaseFunctions {
             return null;
         }
 
-        public static Bool ConfirmCredentials(String Username, String Password){
+        public static Boolean ConfirmCredentials(String Username, String Password){
 
             return null;
         }
