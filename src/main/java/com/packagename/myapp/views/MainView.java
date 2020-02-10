@@ -1,5 +1,6 @@
-package com.packagename.myapp;
+package com.packagename.myapp.views;
 
+import com.packagename.myapp.services.GreetService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;

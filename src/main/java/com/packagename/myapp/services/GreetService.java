@@ -1,4 +1,4 @@
-package com.packagename.myapp;
+package com.packagename.myapp.services;
 
 import java.io.Serializable;
 
