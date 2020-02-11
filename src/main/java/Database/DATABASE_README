@@ -1,0 +1,50 @@
+-----------------SETUP---------------------
+
+https://github.com/rohit7209/AccessRemoteMySQLDB
+
+-clone this and import the .jar file.
+-to import a jar into a intellij project click on file (top right) the click all these buttons at the same time:
+CTRL + SHIFT + ALT + S
+-got to dependencies in the tab and click the + at the right side of the screen, select Jar and select the file and your
+good to go!!
+
+-----------------Image Saving-------------------------
+
+https://www.tutorialspoint.com/How-to-convert-Image-to-Byte-Array-in-java
+
+------------------USE---------------------------------
+
+-There are 2 static classes in Database Functions, DBAccounts and DBImages
+    -DBAccounts is all the needed functions for manipulating account information in db
+    -DBImages is all the needed functions for manipulating Images in the db
+
+-DBAccounts examples...
+
+       To add a user:
+
+       //this connects to database
+       DatabaseFunctions.Connect();
+
+       //this Instantiates user entity
+       User user = new User("Test15", "Test1234");
+
+       //this adds user to the database and returns the User_ID
+       int id = DatabaseFunctions.DBAccounts.CreateUser(user);
+
+       To Get a User:
+       //gets user from user ID
+       User user = DatabaseFunctions.DBAccounts.SelectUser(User_ID);
+
+       or
+
+       //gets User ID from User
+       User user = new User("Test15", "Test1234");
+       //if -1 then the user does not exist
+       int User_ID = DatabaseFunctions.DBAccounts.SelectUserID(user);
+
+To work with images and their database functions they work the same way but replace DBAccounts with DBImages and
+use the Image entity and not User.
+
+SelectImages(User_ID) and SelectImages() both return lists of image entities. use this to iterate over images and
+get a group of images.
+
