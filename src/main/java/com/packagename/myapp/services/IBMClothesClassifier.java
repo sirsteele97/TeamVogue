@@ -31,7 +31,6 @@ public class IBMClothesClassifier implements IClothesClassifier {
                 .threshold(0f)
                 .build();
         ClassifiedImages results = visualRecognition.classify(classifyOptions).execute().getResult();
-        System.out.println(results);
 
         Map<String, String> attributes = new HashMap<String,String>();
 
