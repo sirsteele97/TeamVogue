@@ -27,7 +27,7 @@ public class IBMClothesClassifier implements IClothesClassifier {
                 .imagesFile(image)
                 .imagesFilename("clothing.png")
                 .addClassifierId("ClothModel_1452037569")
-                .addClassifierId("ColorModel_735114617")
+                .addClassifierId("ColorModel_1451624520")
                 .threshold(0f)
                 .build();
         ClassifiedImages results = visualRecognition.classify(classifyOptions).execute().getResult();
