@@ -8,7 +8,7 @@ import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
+import java.util.Map;
 
 
 @Route
@@ -22,10 +22,9 @@ public class UploadView extends VerticalLayout {
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
         upload.addFinishedListener(e -> {
-            List<String> attributes = clothesClassifier.getClothingAttributes(buffer.getInputStream());
-            for(String s : attributes){
-                System.out.println(s);
-            }
+            Map<String, String> attributes = clothesClassifier.getClothingAttributes(buffer.getInputStream());
+            System.out.println(attributes.get("Cloth Model"));
+            System.out.println(attributes.get("Color Model"));
         });
 
         // Add the upload button and import the css class to center it.

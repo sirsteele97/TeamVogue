@@ -1,10 +1,10 @@
 package com.packagename.myapp.services.interfaces;
 
 import java.io.InputStream;
-import java.util.List;
+import java.util.Map;
 
 public interface IClothesClassifier {
 
-    List<String> getClothingAttributes(InputStream image);
+    Map<String, String> getClothingAttributes(InputStream image);
 
 }
