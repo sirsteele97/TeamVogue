@@ -26,10 +26,10 @@ https://www.tutorialspoint.com/How-to-convert-Image-to-Byte-Array-in-java
        DatabaseFunctions.Connect();
 
        //this Instantiates user entity
-       User user = new User("Test15", "Test1234");
+       User user = new User(username: "Test15", password: "Test1234");
 
        //this adds user to the database and returns the User_ID
-       int id = DatabaseFunctions.DBAccounts.CreateUser(user);
+       DatabaseFunctions.CurrentUserID = DatabaseFunctions.DBAccounts.CreateUser(user);
 
        To Get a User:
        //gets user from user ID
@@ -47,4 +47,7 @@ use the Image entity and not User.
 
 SelectImages(User_ID) and SelectImages() both return lists of image entities. use this to iterate over images and
 get a group of images.
+
+Image Entity requires a user_id and image string, just place "" there and set it to set a buffered image,
+It will auto convert
 

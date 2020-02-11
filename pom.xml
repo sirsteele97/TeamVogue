@@ -148,6 +148,13 @@
             <artifactId>jsch</artifactId>
             <version>0.1.55</version>
         </dependency>
+
+        <dependency>
+            <groupId>AccessRemoteMySQLDB</groupId>
+            <artifactId>AccessRemoteMySQLDB</artifactId>
+            <scope>system</scope>
+            <systemPath>${basedir}\src\lib\AccessRemoteMySQLDB.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
