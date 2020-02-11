@@ -18,11 +18,9 @@ public class DatabaseFunctions {
     static String hpassword = "Steele97*";
     static ConnectHost con = null;
 
+    static int CurrentUserID = 0;
 
     public static void Connect(){
-
-
-
         try{
             String fileURL="https://masonmordue.com/handleSQL.php";	//url of 'habdleSQL.php', remember that the 'habdleSQL.php' must be in the same server in which interested database is located
             String host="localhost";					//server host name
@@ -33,7 +31,6 @@ public class DatabaseFunctions {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public static class DBImages {
