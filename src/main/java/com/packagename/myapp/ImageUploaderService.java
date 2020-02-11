@@ -1,13 +1,11 @@
 package com.packagename.myapp;
 
-import Database.DatabaseFunctions;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HtmlComponent;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.internal.MessageDigestUtil;
 import com.vaadin.flow.server.StreamResource;
@@ -20,21 +18,22 @@ import javax.imageio.stream.ImageInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
 @Service
-public class ImageUploaderService implements Serializable {
+class ImageUploaderService implements ImageUploaderServiceInterface {
 
     // Method from Vaadin demo used to manage the uploader component and produce a preview image.
     public Component createComponent(String mimeType, String fileName,
-                                      InputStream stream) {
+                                     InputStream stream) {
         if (mimeType.startsWith("text")) {
             return null;
         } else if (mimeType.startsWith("image")) {
             Image image = new Image();
+            image.setMaxHeight("1000px");
+            image.setMaxWidth("1000px");
             try {
 
                 byte[] bytes = IOUtils.toByteArray(stream);
@@ -76,7 +75,7 @@ public class ImageUploaderService implements Serializable {
      * @param outputContainer The OutputBuffer with the file itself.
      */
     public void showOutput(String text, Component content,
-                            HasComponents outputContainer){
+                    HasComponents outputContainer){
         HtmlComponent p = new HtmlComponent(Tag.P);
         p.getElement().setText(text);
         outputContainer.add(p);

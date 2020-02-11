@@ -30,7 +30,7 @@ public class ImageUploadView extends VerticalLayout {
      *
      * @param service The service for image uploading.
      */
-    public ImageUploadView(@Autowired ImageUploaderService service) {
+    public ImageUploadView(@Autowired ImageUploaderServiceInterface service) {
         Div output = new Div();
         Button button = new Button("Upload");
         button.setEnabled(false);
@@ -46,7 +46,6 @@ public class ImageUploadView extends VerticalLayout {
 
         // On a file successfully uploading, show the output.
         upload.addSucceededListener(event -> {
-            // TODO: Add some sort of filename detection to ensure no duplicate files in one upload batch.
             Component component = service.createComponent(event.getMIMEType(),
                     event.getFileName(),
                     buffer.getInputStream(event.getFileName()));
