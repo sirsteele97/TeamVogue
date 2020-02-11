@@ -1,6 +1,7 @@
 package Database;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import armdb.*;
@@ -15,54 +16,188 @@ public class DatabaseFunctions {
     static String password = "FD80E683B904F2D41508DF7A9ED2C7DF2B181DD7";
     static String husername = "masohtdc";
     static String hpassword = "Steele97*";
-    static private ConnectHost con = null;
+    static ConnectHost con = null;
 
 
-    public static void Connect() throws SQLQueryException {
+    public static void Connect(){
 
-        String fileURL="https://masonmordue.com/handleSQL.php";	//url of 'habdleSQL.php', remember that the 'habdleSQL.php' must be in the same server in which interested database is located
-        String host="localhost";					//server host name
-        String user="masohtdc_sirsteele97";						//username
-        String pass="Steele1997";						//password
-        String DBName="masohtdc_TeamVogue";						//database name
 
-        con=new ConnectHost(fileURL, host, user, pass, DBName);	//make connection
+
+        try{
+            String fileURL="https://masonmordue.com/handleSQL.php";	//url of 'habdleSQL.php', remember that the 'habdleSQL.php' must be in the same server in which interested database is located
+            String host="localhost";					//server host name
+            String user="masohtdc_sirsteele97";						//username
+            String pass="Steele1997";						//password
+            String DBName="masohtdc_TeamVogue";						//database name
+            con=new ConnectHost(fileURL, host, user, pass, DBName);	//make connection
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public static class DBImages{
+    public static class DBImages {
 
-        private enum columns{USER_ID, IMG_ID, IMG}
+        private enum columns {USER_ID, IMG_ID, IMG}
 
         //Selects list of images
-        public static List SelectImages(int UserID){
+        public static List SelectImages(int UserID) {
+            List images = new ArrayList<Image>();
+            QueryResult qr = null;
+            SQLQuery query = new SQLQuery(con);
+            String username = "";
+            try {
+                qr = query.statement("select * from Images WHERE User_ID = " + UserID + ";");        //execution of query statement
+                while (qr.nextFlag()) {                               //setting flag to next row till next row exists
+                    //print column_1 & column_2 value of row where flag is set
 
-            return null;
+                    if (Integer.parseInt(qr.getValue("User_ID")) == (UserID)) {
+                        Image image = new Image(Integer.valueOf(qr.getValue("User_ID")), qr.getValue("Image"));
+                        image.SetImgID(Integer.valueOf(qr.getValue("Img_ID")));
+                        images.add(image);
+                    }
+                }
+            } catch (SQLQueryException e) {                        //catch exception if occurred
+                System.out.println(e.getMessage());                    //print exception message
+            }
+            return images;
         }
+
 
         //Selects list of ALL Images
-        public static List SelectImages(){
+        public static List SelectImages() {
 
-            return null;
+            List images = new ArrayList<Image>();
+            QueryResult qr = null;
+            SQLQuery query = new SQLQuery(con);
+            String username = "";
+            try {
+                qr = query.statement("select * from Images;");        //execution of query statement
+                while (qr.nextFlag()) {                               //setting flag to next row till next row exists
+                    //print column_1 & column_2 value of row where flag is set
+                    Image image = new Image(Integer.valueOf(qr.getValue("User_ID")), qr.getValue("Image"));
+                    image.SetImgID(Integer.valueOf(qr.getValue("Img_ID")));
+                    images.add(image);
+
+                }
+            } catch (SQLQueryException e) {                        //catch exception if occurred
+                System.out.println(e.getMessage());                    //print exception message
+            }
+            return images;
         }
 
-        //Selects single image based off ImageID
-        public static List SelectSingleImage(int ImageID){
 
-            return null;
+        //Selects single image based off ImageID
+        public static Image SelectSingleImage(int ImageID) {
+            QueryResult qr = null;
+            Image image = null;
+            SQLQuery query = new SQLQuery(con);
+            String username = "";
+            try {
+                qr = query.statement("select * from Images;");        //execution of query statement
+                while (qr.nextFlag()) {                               //setting flag to next row till next row exists
+                    if (Integer.parseInt(qr.getValue("Img_ID")) == ImageID) {
+                        image = new Image(Integer.valueOf(qr.getValue("User_ID")), qr.getValue("Image"));
+                        image.SetImgID(Integer.valueOf(qr.getValue("Img_ID")));
+                    }
+
+                }
+            } catch (SQLQueryException e) {                        //catch exception if occurred
+                System.out.println(e.getMessage());                    //print exception message
+            }
+            return image;
+        }
+
+        public static int SelectSingleImage(Image image) {
+            QueryResult qr = null;
+            SQLQuery query = new SQLQuery(con);
+            String username = "";
+            try {
+                qr = query.statement("select * from Images;");        //execution of query statement
+                while (qr.nextFlag()) {                               //setting flag to next row till next row exists
+                    if (qr.getValue("image").equals(image.GetImage()) && Integer.parseInt(qr.getValue("User_ID")) == (image.GetUserID())) {
+                        image.SetImgID(Integer.valueOf(qr.getValue("Img_ID")));
+                    }
+
+                }
+            } catch (SQLQueryException e) {                        //catch exception if occurred
+                System.out.println(e.getMessage());                    //print exception message
+            }
+            return image.GetImgID();
         }
 
         //Creates a new Image Entry
-        public static int CreateImage(int UserID){
+        public static int CreateImage(Image image) {
+            int isCreated = -1;
 
-            return 0;
+            Boolean AlreadyImage = true;
+            QueryResult qr = null;
+            SQLUpdate query = new SQLUpdate(con);
+            try {
+                AlreadyImage = ConfirmImage(image);
+                if (!AlreadyImage) {
+                    query.statement("INSERT INTO Images (User_ID, Image) VALUES ('" + image.GetUserID() + "','" + image.GetImage() + "');");
+                    isCreated = SelectSingleImage(image);
+                }
+            } catch (SQLUpdateException e) {
+                System.out.println(e.getMessage());
+            }
+            return isCreated;
         }
 
         //Deletes Image Entry
-        public static void DeleteImage(int ImgageID){
+        public static Boolean DeleteImage(int ImageID) {
+            Boolean userExists = false;
+            Boolean AlreadyUser = true;
+            QueryResult qr = null;
+            SQLUpdate query = new SQLUpdate(con);
+            try {
+                Image image = SelectSingleImage(ImageID);
+                if (!image.equals(null)) {
+                    userExists = true;
+                    query.statement("DELETE FROM Images WHERE Img_ID = '" + ImageID + "';");
+                }
 
+            } catch (SQLUpdateException e) {
+                System.out.println(e.getMessage());
+            }
+            return userExists;
+        }
+
+        public static Boolean ConfirmImage(Image image) {
+            Boolean confirmed = false;
+            QueryResult qr = null;
+            SQLQuery query = new SQLQuery(con);
+            try {
+                qr = query.statement("select * from Images");
+                while (qr.nextFlag()) {                               //setting flag to next row till next row exists
+                    //print column_1 & column_2 value of row where flag is set
+
+                    if (Integer.parseInt(qr.getValue("Img_ID")) == image.GetImgID() || qr.getValue("Image").equals(image.GetImage())) {
+                        confirmed = true;
+                    }
+                }
+            } catch (SQLQueryException e) {
+                System.out.println(e.getMessage());
+            }
+            return confirmed;
+        }
+
+        public static void UpdateImage(Image image, String NewImage){
+
+            QueryResult qr = null;
+            SQLUpdate query=new SQLUpdate(con);
+            try{
+                int img_id = SelectSingleImage(image);
+                if(img_id > 0){
+                    query.statement("UPDATE Images SET Image = '" + NewImage + "' WHERE Img_ID = '"+img_id+"';");
+                }
+
+            }catch(SQLUpdateException e){
+                System.out.println(e.getMessage());
+            }
         }
     }
-
     public static class DBAccounts{
         private enum columns{USER_ID, USERNAME, PASSWORD}
 
@@ -118,6 +253,9 @@ public class DatabaseFunctions {
             return confirmed;
         }
 
+        public static Boolean ConfirmCredentials(User user){
+            return ConfirmCredentials(user.GetUsername(), user.GetPassword());
+        }
         //Returns -1 if ID is not found
         public static int SelectUserID(String Username, String Password){
             String id = "-1";
@@ -135,7 +273,11 @@ public class DatabaseFunctions {
             }catch(SQLQueryException e){
                 System.out.println(e.getMessage());
             }
-            return Integer.valueOf(id);
+            return Integer.parseInt(id);
+        }
+
+        public static int SelectUserID(User user){
+            return SelectUserID(user.GetUsername(), user.GetUsername());
         }
 
         //Returns a user
@@ -160,7 +302,7 @@ public class DatabaseFunctions {
         }
 
         //returns User_ID, if -1 then user already exists
-        public static int CreateUser(String Username, String Password){
+        private static int CreateUser(String Username, String Password){
             int id = -1;
             Boolean AlreadyUser = true;
             QueryResult qr = null;
@@ -175,6 +317,10 @@ public class DatabaseFunctions {
                 System.out.println(e.getMessage());
             }
             return id;
+        }
+
+        public static int CreateUser(User user){
+            return CreateUser(user.GetUsername(), user.GetPassword());
         }
 
         public static void UpdateUsername(int UserID, String Username){
@@ -224,5 +370,6 @@ public class DatabaseFunctions {
         }
     }
 }
+
 
 
