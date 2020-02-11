@@ -1,6 +1,6 @@
-package com.packagename.myapp.views;
+package com.packagename.myapp;
 
-import com.packagename.myapp.services.interfaces.IClothesClassifier;
+import com.packagename.myapp.IClothesClassifier;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;

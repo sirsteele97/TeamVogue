@@ -1,4 +1,4 @@
-package com.packagename.myapp.services.interfaces;
+package com.packagename.myapp;
 
 import java.io.InputStream;
 import java.util.Map;

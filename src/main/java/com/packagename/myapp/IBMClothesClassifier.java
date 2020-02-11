@@ -1,4 +1,4 @@
-package com.packagename.myapp.services;
+package com.packagename.myapp;
 
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.visual_recognition.v3.VisualRecognition;
@@ -6,7 +6,7 @@ import com.ibm.watson.visual_recognition.v3.model.ClassResult;
 import com.ibm.watson.visual_recognition.v3.model.ClassifiedImages;
 import com.ibm.watson.visual_recognition.v3.model.ClassifierResult;
 import com.ibm.watson.visual_recognition.v3.model.ClassifyOptions;
-import com.packagename.myapp.services.interfaces.IClothesClassifier;
+import com.packagename.myapp.IClothesClassifier;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
