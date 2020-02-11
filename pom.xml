@@ -153,6 +153,7 @@
             <groupId>AccessRemoteMySQLDB</groupId>
             <artifactId>AccessRemoteMySQLDB</artifactId>
             <scope>system</scope>
+            <version>1.0</version>
             <systemPath>${basedir}\src\lib\AccessRemoteMySQLDB.jar</systemPath>
         </dependency>
     </dependencies>
