@@ -6,6 +6,8 @@
     <version>2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -24,8 +26,12 @@
         <version>2.2.0.RELEASE</version>
     </parent>
 
+
     <repositories>
-        <!-- The order of definitions matters. Explicitly defining central here to make sure it has the highest priority. -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
 
         <!-- Main Maven repository -->
         <repository>
@@ -43,6 +49,7 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+
     </repositories>
 
     <pluginRepositories>
@@ -69,6 +76,13 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>AccessRemoteMySQLDB-1.0</groupId>
+            <artifactId>AccessRemoteMySQLDB-1.0</artifactId>
+            <version>1.0</version>
+            <systemPath>${project.basedir}/lib/AccessRemoteMySQLDB-1.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -105,6 +119,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
             <groupId>mysql</groupId>
@@ -149,12 +164,7 @@
             <version>0.1.55</version>
         </dependency>
 
-        <dependency>
-            <groupId>AccessRemoteMySQLDB</groupId>
-            <artifactId>AccessRemoteMySQLDB</artifactId>
-            <scope>system</scope>
-            <systemPath>${basedir}\src\lib\AccessRemoteMySQLDB.jar</systemPath>
-        </dependency>
+
     </dependencies>
 
     <build>
