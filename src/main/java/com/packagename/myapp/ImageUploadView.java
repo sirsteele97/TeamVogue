@@ -12,6 +12,8 @@ import com.vaadin.flow.router.Route;
 import elemental.json.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+
 /**
  * A Vaadin view class for the upload page
  *
@@ -55,7 +57,11 @@ public class ImageUploadView extends VerticalLayout {
 
         // On a button click, clear out the displayed images and reset the upload component.
         button.addClickListener(e -> {
-            service.uploadImages(buffer);
+            try {
+                service.uploadImages(buffer);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
             buffer.getFiles().clear();
             output.removeAll();
             upload.getElement().setPropertyJson("files", Json.createArray());

@@ -1,26 +1,36 @@
 package com.packagename.myapp;
 
+import Database.DatabaseFunctions;
+import com.google.gson.Gson;
+import com.ibm.cloud.sdk.core.http.HttpMediaType;
+import com.ibm.cloud.sdk.core.security.IamAuthenticator;
+import com.ibm.watson.discovery.v2.model.AddDocumentOptions;
+import com.ibm.watson.discovery.v2.Discovery;
+import com.ibm.watson.discovery.v2.model.DocumentAccepted;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HtmlComponent;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.upload.receivers.FileData;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.internal.MessageDigestUtil;
 import com.vaadin.flow.server.StreamResource;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
+import java.io.OutputStream;
+import java.util.*;
 
 @Service
 class ImageUploaderService implements ImageUploaderServiceInterface {
@@ -82,9 +92,66 @@ class ImageUploaderService implements ImageUploaderServiceInterface {
         outputContainer.add(content);
     }
 
-    public void uploadImages(MultiFileMemoryBuffer buffer) {
+    public void uploadImages(MultiFileMemoryBuffer buffer) throws IOException {
+        Gson g = new Gson();
+
         Set<String> files = buffer.getFiles();
         System.out.println(" Imma upload that! " + files.toString());
         // This is where the image will be uploaded to the database and then sent to visual recognition.
+        for (String fileName: files) {
+            InputStream fileInputStream = buffer.getInputStream(fileName);
+            BufferedImage imageData = ImageIO.read(fileInputStream);
+            String extension = FilenameUtils.getExtension(fileName);
+            String nameNoExtension = FilenameUtils.removeExtension(fileName);
+
+
+            // Upload image to the database.
+            Database.Image imageToUpload = new Database.Image(1);
+            imageToUpload.SetImage(imageData,extension);
+            int imageID = DatabaseFunctions.DBImages.CreateImage(new Database.Image(1));
+
+            // Run visual recognition and upload to Discovery.
+            Map<String,String> metadata = new HashMap<>();
+            metadata.put("User ID","1");
+            metadata.put("Image ID",String.valueOf(imageID));
+
+            String featureJSON = runVisualRecognition(fileInputStream,g);
+            String uploadResponse = uploadFeatureJSONToDiscovery(featureJSON, g.toJson(metadata));
+            System.out.println(uploadResponse);
+        }
+    }
+
+    /**
+     * Sends the image file to Visual Classification and returns the JSON response after adding in extra information.
+     * @param file Input stream of the image file to be sent to Visual Recognition
+     * @return JSON String of the Visual Recognition response.
+     */
+    public String runVisualRecognition(InputStream file, Gson g){
+        IBMClothesClassifier classifier = new IBMClothesClassifier();
+        Map<String,String> visualRecognitionFeatures = classifier.getClothingAttributes(file);
+        return g.toJson(visualRecognitionFeatures);
+    }
+
+    /**
+     * Take the response JSON from the visual recognition service and upload it to discovery.
+     * @param featureJson The JSON response received from the visual recognition service.
+     * @param metadata A JSON string representing the metadata to include with the JSON response.
+     * @return A string representing the discovery response for the upload.
+     */
+    private String uploadFeatureJSONToDiscovery(String featureJson, String metadata){
+        IamAuthenticator authenticator = new IamAuthenticator("Hf-r0AjrwBGkJ7b1fsAjmTdFRIHOAYkBN_Gj0yR0X9tU");
+        Discovery discovery = new Discovery("2019-04-30",authenticator);
+        discovery.setServiceUrl("https://api.us-south.discovery.watson.cloud.ibm.com/instances/4f60488c-afaa-4e79-a7f3-849d9d7b9b35");
+
+        String environmentID = "";
+        String collectionID = "";
+        InputStream documentStream = new ByteArrayInputStream(featureJson.getBytes());
+
+        AddDocumentOptions.Builder builder = new AddDocumentOptions.Builder(environmentID,collectionID);
+        builder.file(documentStream);
+        builder.metadata(metadata);
+        builder.fileContentType(HttpMediaType.APPLICATION_JSON);
+        DocumentAccepted response = discovery.addDocument(builder.build()).execute().getResult();
+        return response.toString();
     }
 }
