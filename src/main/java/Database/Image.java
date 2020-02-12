@@ -12,8 +12,14 @@ public class Image {
     private int ImgID;
     private int UserID;
 
-    public Image(int UserID, String Image){
-        this.Image = Image;
+    public Image(int UserID){
+        this.Image = "";
+        this.UserID = UserID;
+        this.ImgID = -1;
+    }
+
+    public Image(int UserID, String img){
+        this.Image = img;
         this.UserID = UserID;
         this.ImgID = -1;
     }
