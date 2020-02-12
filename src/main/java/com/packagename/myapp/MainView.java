@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
@@ -43,24 +44,47 @@ public class MainView extends VerticalLayout {
     public MainView(@Autowired GreetService service) {
 
         // Use TextField for standard text input
-        TextField textField = new TextField("Your name");
+        TextField textFieldName = new TextField("Username");
+        PasswordField passwordField = new PasswordField("Password");
 
-        // Button click listeners can be defined as lambda expressions
-        Button button = new Button("Say hello",
-                e -> Notification.show(service.greet(textField.getValue())));
+        //Upon click, the user attempts to log in
+        Button button = new Button("Log In",
+                e -> {
+                    if(LogIn(textFieldName.getValue(), passwordField.getValue()) == 0) {
+                        //Successful login, switch pages
+                    }
+
+                    //Unsuccessful login - alert the user
+                    Notification notification = new Notification(
+                            "Invalid credentials.", 3000, Notification.Position.MIDDLE);
+                    notification.open();
+                });
 
         // Theme variants give you predefined extra styles for components.
         // Example: Primary button is more prominent look.
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        // You can specify keyboard shortcuts for buttons.
-        // Example: Pressing enter in this view clicks the Button.
-        button.addClickShortcut(Key.ENTER);
-
         // Use custom CSS classes to apply styling. This is defined in shared-styles.css.
         addClassName("centered-content");
 
-        add(textField, button);
+        add(textFieldName, passwordField, button);
     }
 
+    /**
+    * Connects to the database and tests credentials.
+     *
+     * @return 0 if successful, -1 otherwise.
+    */
+    public static int LogIn (String name, String password) {
+        /*
+        * Connect to DB
+        *
+        * if(valid)
+        *   return 0
+        * return -1
+        * */
+
+        //to avoid error, temporary
+        return 0;
+    }
 }
