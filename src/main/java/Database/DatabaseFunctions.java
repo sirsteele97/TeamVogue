@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import armdb.*;
-import com.jcraft.jsch.*;
-import com.mysql.jdbc.Driver;
-
 
 public class DatabaseFunctions {
 
