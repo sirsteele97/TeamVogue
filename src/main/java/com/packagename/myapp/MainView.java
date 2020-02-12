@@ -47,13 +47,15 @@ public class MainView extends VerticalLayout {
         TextField textFieldName = new TextField("Username");
         PasswordField passwordField = new PasswordField("Password");
 
-        Button button = new Button("Log In",
+        Button button = new Button("Log In");
+        button.addClickListener(
                 e -> {
                     if(DatabaseFunctions.DBAccounts.ConfirmCredentials(textFieldName.getValue(), passwordField.getValue())) {
-                        
+                        //Successful Login
+                        button.getUI().ifPresent(ui -> ui.navigate("closet"));
                     }
-
-                    //Unsuccessful login - alert the user
+                    
+                    //Unsuccessful Login
                     Notification notification = new Notification(
                             "Invalid credentials.", 3000, Notification.Position.MIDDLE);
                     notification.open();
