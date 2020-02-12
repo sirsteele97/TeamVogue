@@ -19,3 +19,13 @@ To setup:
         Under Frontend/Styles holds css scripts to change the theme.
 
         Dont look under node_modules, it scares me how much bullshit Node.JS has to install so our simple app can run.
+
+CLONE THIS---------------------
+
+https://github.com/rohit7209/AccessRemoteMySQLDB
+
+-clone this and import the .jar file.
+-to import a jar into a intellij project click on file (top right) the click all these buttons at the same time:
+CTRL + SHIFT + ALT + S
+-got to dependencies in the tab and click the + at the right side of the screen, select Jar and select the file and your
+good to go!!
