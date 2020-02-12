@@ -34,7 +34,7 @@
             <repository>
                 <id>in-project</id>
                 <name>In Project Repo</name>
-                <url>file://${basedir}/src/lib</url>
+                <url>file://${project.basedir}/lib</url>
             </repository>
 
         <!-- Main Maven repository -->
@@ -81,6 +81,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>AccessRemoteMySQLDB</groupId>
+            <artifactId>AccessRemoteMySQLDB</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
@@ -116,6 +121,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
             <groupId>mysql</groupId>
@@ -160,11 +166,7 @@
             <version>0.1.55</version>
         </dependency>
 
-        <dependency>
-            <groupId>AccessRemoteMySQLDB</groupId>
-            <artifactId>AccessRemoteMySQLDB</artifactId>
-            <version>1.0</version>
-        </dependency>
+
     </dependencies>
 
     <build>
