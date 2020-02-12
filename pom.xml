@@ -27,15 +27,11 @@
     </parent>
 
 
-
     <repositories>
-        <!-- The order of definitions matters. Explicitly defining central here to make sure it has the highest priority. -->
-
-            <repository>
-                <id>in-project</id>
-                <name>In Project Repo</name>
-                <url>file://${project.basedir}/lib</url>
-            </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
 
         <!-- Main Maven repository -->
         <repository>
@@ -81,9 +77,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>AccessRemoteMySQLDB</groupId>
-            <artifactId>AccessRemoteMySQLDB</artifactId>
+            <groupId>AccessRemoteMySQLDB-1.0</groupId>
+            <artifactId>AccessRemoteMySQLDB-1.0</artifactId>
             <version>1.0</version>
+            <systemPath>${project.basedir}/lib/AccessRemoteMySQLDB-1.jar</systemPath>
+            <scope>system</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
