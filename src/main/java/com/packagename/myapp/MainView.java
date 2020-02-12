@@ -1,9 +1,11 @@
 package com.packagename.myapp;
 
+import Database.DatabaseFunctions;
 import com.packagename.myapp.GreetService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.charts.model.Navigator;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -42,16 +44,13 @@ public class MainView extends VerticalLayout {
      * @param service The message service. Automatically injected Spring managed bean.
      */
     public MainView(@Autowired GreetService service) {
-
-        // Use TextField for standard text input
         TextField textFieldName = new TextField("Username");
         PasswordField passwordField = new PasswordField("Password");
 
-        //Upon click, the user attempts to log in
         Button button = new Button("Log In",
                 e -> {
-                    if(LogIn(textFieldName.getValue(), passwordField.getValue()) == 0) {
-                        //Successful login, switch pages
+                    if(DatabaseFunctions.DBAccounts.ConfirmCredentials(textFieldName.getValue(), passwordField.getValue())) {
+                        
                     }
 
                     //Unsuccessful login - alert the user
@@ -60,31 +59,10 @@ public class MainView extends VerticalLayout {
                     notification.open();
                 });
 
-        // Theme variants give you predefined extra styles for components.
-        // Example: Primary button is more prominent look.
+        //cosmetics
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        // Use custom CSS classes to apply styling. This is defined in shared-styles.css.
         addClassName("centered-content");
 
         add(textFieldName, passwordField, button);
-    }
-
-    /**
-    * Connects to the database and tests credentials.
-     *
-     * @return 0 if successful, -1 otherwise.
-    */
-    public static int LogIn (String name, String password) {
-        /*
-        * Connect to DB
-        *
-        * if(valid)
-        *   return 0
-        * return -1
-        * */
-
-        //to avoid error, temporary
-        return 0;
     }
 }
