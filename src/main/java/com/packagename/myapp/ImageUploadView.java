@@ -69,7 +69,10 @@ public class ImageUploadView extends VerticalLayout {
         });
 
         // Add the upload button and import the css class to center it.
-        addClassName("centered-content");
-        add(upload, output, button);
+        Div mainStuff = new Div();
+        mainStuff.addClassName("centered-content");
+        mainStuff.add(upload, output, button);
+
+        add(new TopBar(), mainStuff);
     }
 }

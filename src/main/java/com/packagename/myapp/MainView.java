@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.charts.model.Navigator;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -63,8 +64,12 @@ public class MainView extends VerticalLayout {
 
         //cosmetics
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        addClassName("centered-content");
 
-        add(textFieldName, passwordField, button);
+        Div mainStuff = new Div();
+        mainStuff.setClassName("centered-content");
+
+        mainStuff.add(textFieldName, passwordField, button);
+
+        add(new TopBar(), mainStuff);
     }
 }
