@@ -1,16 +1,19 @@
 package com.packagename.myapp;
 
-import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
+import com.google.gson.Gson;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.Route;
-import elemental.json.Json;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * A Vaadin view class for the upload page
@@ -30,15 +33,9 @@ public class ImageUploadView extends VerticalLayout {
      *
      * @param service The service for image uploading.
      */
-    public ImageUploadView(@Autowired ImageUploaderServiceInterface service) {
-        Div output = new Div();
-        Button button = new Button("Upload");
-        button.setEnabled(false);
-        button.setDisableOnClick(true);
-        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
+    public ImageUploadView(@Autowired DiscoveryService service, @Autowired S3Service s3Service, @Autowired IBMClothesClassifier classifier) {
         // Add basic upload button.
-        MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+        MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
         upload.setAcceptedFileTypes("image/jpeg","image/png");
         upload.setMaxFileSize(8388608);
@@ -46,26 +43,27 @@ public class ImageUploadView extends VerticalLayout {
 
         // On a file successfully uploading, show the output.
         upload.addSucceededListener(event -> {
-            Component component = service.createComponent(event.getMIMEType(),
-                    event.getFileName(),
-                    buffer.getInputStream(event.getFileName()));
-            service.showOutput(event.getFileName(), component, output);
-            button.setEnabled(true);
-        });
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                IOUtils.copy(buffer.getInputStream(), baos);
+                byte[] bytes = baos.toByteArray();
 
-        // On a button click, clear out the displayed images and reset the upload component.
-        button.addClickListener(e -> {
-            service.uploadImages(buffer);
-            buffer.getFiles().clear();
-            output.removeAll();
-            upload.getElement().setPropertyJson("files", Json.createArray());
-            button.setEnabled(false);
+                s3Service.uploadImage(new ByteArrayInputStream(bytes),event.getFileName());
+                Map<String,String> visualRecognitionFeatures = classifier.getClothingAttributes(new ByteArrayInputStream(bytes));
+                System.out.print(visualRecognitionFeatures.get("ClothModel")+" , "+visualRecognitionFeatures.get("ColorModel"));
+                visualRecognitionFeatures.put("fileName",event.getFileName());
+                String json = new Gson().toJson(visualRecognitionFeatures);
+                System.out.println(json);
+                service.addClothing(json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
 
         // Add the upload button and import the css class to center it.
         Div mainStuff = new Div();
         mainStuff.addClassName("centered-content");
-        mainStuff.add(upload, output, button);
+        mainStuff.add(upload);
 
         add(new TopBar(), mainStuff);
     }

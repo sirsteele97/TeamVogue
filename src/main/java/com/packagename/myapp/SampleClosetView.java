@@ -17,7 +17,7 @@ import java.util.List;
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class SampleClosetView extends VerticalLayout {
 
-    public SampleClosetView(@Autowired DiscoveryServiceMock service) {
+    public SampleClosetView(@Autowired DiscoveryService realDiscovery, @Autowired S3Service s3Service) {
         ArrayList<String> clothes = new ArrayList<String>();
         clothes.add("long sleeve shirt");
         clothes.add("short sleeve shirt");
@@ -38,9 +38,9 @@ public class SampleClosetView extends VerticalLayout {
         colorsSelect.setAllowCustomValue(false);
 
         Div pictureArea = new Div();
-        List<String> allImages = service.imageUrls("","");
+        List<String> allImages = realDiscovery.getImageUrls("","");
         for(String imageUrl : allImages){
-            Image image = new Image(imageUrl,"");
+            Image image = new Image(s3Service.getImageUrl(imageUrl),"");
             image.setWidth("300px");
             image.setHeight("300px");
             pictureArea.add(image);
@@ -49,20 +49,23 @@ public class SampleClosetView extends VerticalLayout {
 
         Button filterButton = new Button("Filter",e -> {
             pictureArea.removeAll();
-            String clothesParam = clothesSelect.getValue().toString();
-            String colorParam = colorsSelect.getValue().toString();
-            List<String> images = service.imageUrls(clothesParam,colorParam);
+            String clothesParam = (clothesSelect.getValue() != null) ? clothesSelect.getValue().toString() : "";
+            String colorParam = (colorsSelect.getValue() != null) ? colorsSelect.getValue().toString() : "";
+            List<String> images = realDiscovery.getImageUrls(clothesParam,colorParam);
             for(String imageUrl : images){
-                Image image = new Image(imageUrl,"");
+                Image image = new Image(s3Service.getImageUrl(imageUrl),"");
                 image.setWidth("300px");
                 image.setHeight("300px");
                 pictureArea.add(image);
             }
+            realDiscovery.getImageUrls(clothesParam,colorParam);
             //add pictures based on filter parameters here (pictureArea.add())
         });
 
+        Button uploadButton = new Button("Upload",e -> filterButton.getUI().ifPresent(ui->ui.navigate("imageupload")));
+
         Div mainStuff = new Div();
-        mainStuff.add(clothesSelect, colorsSelect, filterButton);
+        mainStuff.add(clothesSelect, colorsSelect, filterButton,uploadButton);
 
         add(new TopBar(),mainStuff,pictureArea);
     }

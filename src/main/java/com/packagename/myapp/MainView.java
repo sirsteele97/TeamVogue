@@ -55,11 +55,12 @@ public class MainView extends VerticalLayout {
                         //Successful Login
                         button.getUI().ifPresent(ui -> ui.navigate("closet"));
                     }
-                    
-                    //Unsuccessful Login
-                    Notification notification = new Notification(
-                            "Invalid credentials.", 3000, Notification.Position.MIDDLE);
-                    notification.open();
+                    else{
+                        //Unsuccessful Login
+                        Notification notification = new Notification(
+                                "Invalid credentials.", 3000, Notification.Position.MIDDLE);
+                        notification.open();
+                    }
                 });
 
         //cosmetics
