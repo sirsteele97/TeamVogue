@@ -8,11 +8,6 @@ import armdb.*;
 
 public class DatabaseFunctions {
 
-    static String url = "jdbc:mysql://198.187.29.149:22/masohtdc_TeamVogue";
-    static String username = "masohtdc_sirsteele97";
-    static String password = "FD80E683B904F2D41508DF7A9ED2C7DF2B181DD7";
-    static String husername = "masohtdc";
-    static String hpassword = "Steele97*";
     static ConnectHost con = null;
 
     static int CurrentUserID = 0;
@@ -105,11 +100,17 @@ public class DatabaseFunctions {
         public static int SelectSingleImage(Image image) {
             QueryResult qr = null;
             SQLQuery query = new SQLQuery(con);
-            String username = "";
+
             try {
                 qr = query.statement("select * from Images;");        //execution of query statement
-                while (qr.nextFlag()) {                               //setting flag to next row till next row exists
-                    if (qr.getValue("image").equals(image.GetImage()) && Integer.parseInt(qr.getValue("User_ID")) == (image.GetUserID())) {
+                while (qr.nextFlag()) {
+                    String img1 = qr.getValue("image");
+                    String img2 = image.GetImage();
+                    boolean b = false;
+                    if(img1.length() > 99){
+                        b = img1.substring(1,100).equals(img2.substring(1,100));
+                    }
+                    if (b) {
                         image.SetImgID(Integer.valueOf(qr.getValue("Img_ID")));
                     }
 
