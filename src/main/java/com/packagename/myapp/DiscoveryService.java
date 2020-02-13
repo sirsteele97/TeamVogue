@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +21,8 @@ public class DiscoveryService {
     String clothesCollection = "f2ee7a33-3dcd-42bc-81d5-431738ff9173";
     String clothesEnvironment = "100a78cb-2b22-4b88-922b-97b7a63b5a1d";
 
-    public Map<String,String> getImageFileNames(String clothesParam, String colorParam) {
-        Map<String,String> imageUrls = new HashMap<String,String>();
+    public Map<String,Map<String,String>> getImages(String clothesParam, String colorParam) {
+        Map<String,Map<String,String>> imageUrls = new HashMap<String,Map<String,String>>();
 
         IamAuthenticator authenticator = new IamAuthenticator(key);
         Discovery discovery = new Discovery("2019-04-30",authenticator);
@@ -43,7 +42,11 @@ public class DiscoveryService {
 
         List<QueryResult> results = response.getResults();
         for(QueryResult doc : results){
-            imageUrls.put(doc.get("fileName").toString(),doc.getId());
+            Map<String,String> imageMap = new HashMap<String,String>();
+            imageMap.put("FileName",doc.get("FileName").toString());
+            imageMap.put("ClothModel",doc.get("ClothModel").toString());
+            imageMap.put("ColorModel",doc.get("ColorModel").toString());
+            imageUrls.put(doc.getId(),imageMap);
         }
 
         return imageUrls;

@@ -15,9 +15,6 @@ import java.sql.SQLException;
 public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws SQLException, SQLQueryException {
-        System.out.println("Database Connecting...");
-        DatabaseFunctions.Connect();
-        System.out.println("Database Connected!");
         SpringApplication.run(Application.class, args);
     }
 

@@ -50,7 +50,7 @@ public class ImageUploadView extends VerticalLayout {
                 s3Service.uploadImage(new ByteArrayInputStream(bytes),event.getFileName());
                 Map<String,String> visualRecognitionFeatures = classifier.getClothingAttributes(new ByteArrayInputStream(bytes));
                 System.out.print(visualRecognitionFeatures.get("ClothModel")+" , "+visualRecognitionFeatures.get("ColorModel"));
-                visualRecognitionFeatures.put("fileName",event.getFileName());
+                visualRecognitionFeatures.put("FileName",event.getFileName());
                 String json = new Gson().toJson(visualRecognitionFeatures);
                 System.out.println(json);
                 service.addClothing(json);

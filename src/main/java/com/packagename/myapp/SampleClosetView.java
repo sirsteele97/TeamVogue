@@ -1,5 +1,6 @@
 package com.packagename.myapp;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -66,16 +67,17 @@ public class SampleClosetView extends VerticalLayout {
     }
 
     public void addImagesToDiv(String clothesParam, String colorParam, HorizontalLayout pictureArea){
-        Map<String,String> images = discoveryService.getImageFileNames(clothesParam,colorParam);
-        for(String imageFileName : images.keySet()){
+        Map<String,Map<String,String>> images = discoveryService.getImages(clothesParam,colorParam);
+        for(String imageId : images.keySet()){
             VerticalLayout picture = new VerticalLayout();
-            Image image = new Image(s3Service.getImageUrl(imageFileName),"");
+            Image image = new Image(s3Service.getImageUrl(images.get(imageId).get("FileName")),"");
             image.setWidth("300px");
             image.setHeight("300px");
             picture.add(image);
+            picture.add(new Text(images.get(imageId).get("ColorModel")+" , "+images.get(imageId).get("ClothModel")));
             picture.add(new Button("Delete",e->{
-                discoveryService.deleteClothing(images.get(imageFileName));
-                s3Service.deleteImage(imageFileName);
+                discoveryService.deleteClothing(imageId);
+                s3Service.deleteImage(images.get(imageId).get("FileName"));
             }));
 
             pictureArea.add(picture);
