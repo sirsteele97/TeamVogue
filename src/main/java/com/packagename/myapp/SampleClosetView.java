@@ -28,6 +28,7 @@ public class SampleClosetView extends VerticalLayout {
         this.s3Service = s3Service;
 
         ArrayList<String> clothes = new ArrayList<String>();
+        clothes.add("");
         clothes.add("long sleeve shirt");
         clothes.add("short sleeve shirt");
         clothes.add("shorts");
@@ -38,6 +39,7 @@ public class SampleClosetView extends VerticalLayout {
         clothesSelect.setAllowCustomValue(false);
 
         ArrayList<String> colors = new ArrayList<String>();
+        colors.add("");
         colors.add("red");
         colors.add("green");
         colors.add("blue");
