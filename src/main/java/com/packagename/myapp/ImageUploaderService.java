@@ -4,9 +4,9 @@ import Database.DatabaseFunctions;
 import com.google.gson.Gson;
 import com.ibm.cloud.sdk.core.http.HttpMediaType;
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
-import com.ibm.watson.discovery.v2.model.AddDocumentOptions;
-import com.ibm.watson.discovery.v2.Discovery;
-import com.ibm.watson.discovery.v2.model.DocumentAccepted;
+import com.ibm.watson.discovery.v1.model.AddDocumentOptions;
+import com.ibm.watson.discovery.v1.Discovery;
+import com.ibm.watson.discovery.v1.model.DocumentAccepted;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HtmlComponent;
@@ -99,24 +99,24 @@ class ImageUploaderService implements ImageUploaderServiceInterface {
         System.out.println(" Imma upload that! " + files.toString());
         // This is where the image will be uploaded to the database and then sent to visual recognition.
         for (String fileName: files) {
-            InputStream fileInputStream = buffer.getInputStream(fileName);
-            BufferedImage imageData = ImageIO.read(fileInputStream);
+            BufferedImage imageData = ImageIO.read(buffer.getInputStream(fileName));
             String extension = FilenameUtils.getExtension(fileName);
             String nameNoExtension = FilenameUtils.removeExtension(fileName);
-
 
             // Upload image to the database.
             Database.Image imageToUpload = new Database.Image(1);
             imageToUpload.SetImage(imageData,extension);
-            int imageID = DatabaseFunctions.DBImages.CreateImage(new Database.Image(1));
+            int imageID = DatabaseFunctions.DBImages.CreateImage(imageToUpload);
 
             // Run visual recognition and upload to Discovery.
             Map<String,String> metadata = new HashMap<>();
-            metadata.put("User ID","1");
-            metadata.put("Image ID",String.valueOf(imageID));
+            metadata.put("UserID","1");
+            metadata.put("ImageID",String.valueOf("411424"));
 
-            String featureJSON = runVisualRecognition(fileInputStream,g);
-            String uploadResponse = uploadFeatureJSONToDiscovery(featureJSON, g.toJson(metadata));
+            String featureJSON = runVisualRecognition(buffer.getInputStream(fileName),g);
+            // This ensures that the JSON file name will usually always be unique.
+            String JSONFileName =  metadata.get("UserID") + "-" + metadata.get("ImageID");
+            String uploadResponse = uploadFeatureJSONToDiscovery(featureJSON, JSONFileName, g.toJson(metadata));
             System.out.println(uploadResponse);
         }
     }
@@ -138,17 +138,17 @@ class ImageUploaderService implements ImageUploaderServiceInterface {
      * @param metadata A JSON string representing the metadata to include with the JSON response.
      * @return A string representing the discovery response for the upload.
      */
-    private String uploadFeatureJSONToDiscovery(String featureJson, String metadata){
+    private String uploadFeatureJSONToDiscovery(String featureJson, String filename, String metadata){
         IamAuthenticator authenticator = new IamAuthenticator("Hf-r0AjrwBGkJ7b1fsAjmTdFRIHOAYkBN_Gj0yR0X9tU");
         Discovery discovery = new Discovery("2019-04-30",authenticator);
         discovery.setServiceUrl("https://api.us-south.discovery.watson.cloud.ibm.com/instances/4f60488c-afaa-4e79-a7f3-849d9d7b9b35");
 
-        String environmentID = "";
-        String collectionID = "";
+        String environmentID = "c258a6c8-7cdd-494a-8e82-6dc4aa539c78";
+        String collectionID = "f66cd158-2332-4ca9-90d0-546831084de1";
         InputStream documentStream = new ByteArrayInputStream(featureJson.getBytes());
-
         AddDocumentOptions.Builder builder = new AddDocumentOptions.Builder(environmentID,collectionID);
         builder.file(documentStream);
+        builder.filename(filename);
         builder.metadata(metadata);
         builder.fileContentType(HttpMediaType.APPLICATION_JSON);
         DocumentAccepted response = discovery.addDocument(builder.build()).execute().getResult();
