@@ -38,7 +38,6 @@ public class ImageUploadView extends VerticalLayout {
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
         upload.setAcceptedFileTypes("image/jpeg","image/png");
-        upload.setMaxFileSize(8388608);
         upload.setMaxFiles(3);
 
         // On a file successfully uploading, show the output.
@@ -55,6 +54,7 @@ public class ImageUploadView extends VerticalLayout {
                 String json = new Gson().toJson(visualRecognitionFeatures);
                 System.out.println(json);
                 service.addClothing(json);
+                upload.getUI().ifPresent(ui -> ui.navigate("closet"));
             } catch (IOException e) {
                 e.printStackTrace();
             }

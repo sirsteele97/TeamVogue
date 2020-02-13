@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DiscoveryService {
@@ -20,8 +22,8 @@ public class DiscoveryService {
     String clothesCollection = "f2ee7a33-3dcd-42bc-81d5-431738ff9173";
     String clothesEnvironment = "100a78cb-2b22-4b88-922b-97b7a63b5a1d";
 
-    public List<String> getImageUrls(String clothesParam, String colorParam) {
-        List<String> imageUrls = new ArrayList<String>();
+    public Map<String,String> getImageFileNames(String clothesParam, String colorParam) {
+        Map<String,String> imageUrls = new HashMap<String,String>();
 
         IamAuthenticator authenticator = new IamAuthenticator(key);
         Discovery discovery = new Discovery("2019-04-30",authenticator);
@@ -41,7 +43,7 @@ public class DiscoveryService {
 
         List<QueryResult> results = response.getResults();
         for(QueryResult doc : results){
-            imageUrls.add(doc.get("fileName").toString());
+            imageUrls.put(doc.get("fileName").toString(),doc.getId());
         }
 
         return imageUrls;
@@ -59,6 +61,15 @@ public class DiscoveryService {
                 .fileContentType(HttpMediaType.APPLICATION_JSON)
                 .build();
         DocumentAccepted accepted = discovery.addDocument(addDocumentOptions).execute().getResult();
+    }
+
+    public void deleteClothing(String docId){
+        IamAuthenticator authenticator = new IamAuthenticator(key);
+        Discovery discovery = new Discovery("2019-04-30",authenticator);
+        discovery.setServiceUrl(url);
+
+        DeleteDocumentOptions deleteDocumentOptions = new DeleteDocumentOptions.Builder(clothesEnvironment,clothesCollection,docId).build();
+        discovery.deleteDocument(deleteDocumentOptions).execute().getResult();
     }
 
 }

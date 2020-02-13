@@ -5,19 +5,27 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Route(value="closet")
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class SampleClosetView extends VerticalLayout {
 
-    public SampleClosetView(@Autowired DiscoveryService realDiscovery, @Autowired S3Service s3Service) {
+    private DiscoveryService discoveryService;
+    private S3Service s3Service;
+
+    public SampleClosetView(@Autowired DiscoveryService discoveryService, @Autowired S3Service s3Service) {
+        this.discoveryService = discoveryService;
+        this.s3Service = s3Service;
+
         ArrayList<String> clothes = new ArrayList<String>();
         clothes.add("long sleeve shirt");
         clothes.add("short sleeve shirt");
@@ -37,28 +45,15 @@ public class SampleClosetView extends VerticalLayout {
         ComboBox colorsSelect = new ComboBox("Color",colors);
         colorsSelect.setAllowCustomValue(false);
 
-        Div pictureArea = new Div();
-        List<String> allImages = realDiscovery.getImageUrls("","");
-        for(String imageUrl : allImages){
-            Image image = new Image(s3Service.getImageUrl(imageUrl),"");
-            image.setWidth("300px");
-            image.setHeight("300px");
-            pictureArea.add(image);
-        }
+        HorizontalLayout pictureArea = new HorizontalLayout();
+        addImagesToDiv("","",pictureArea);
         //add all pictures to area here (pictureArea.add())
 
         Button filterButton = new Button("Filter",e -> {
             pictureArea.removeAll();
             String clothesParam = (clothesSelect.getValue() != null) ? clothesSelect.getValue().toString() : "";
             String colorParam = (colorsSelect.getValue() != null) ? colorsSelect.getValue().toString() : "";
-            List<String> images = realDiscovery.getImageUrls(clothesParam,colorParam);
-            for(String imageUrl : images){
-                Image image = new Image(s3Service.getImageUrl(imageUrl),"");
-                image.setWidth("300px");
-                image.setHeight("300px");
-                pictureArea.add(image);
-            }
-            realDiscovery.getImageUrls(clothesParam,colorParam);
+            addImagesToDiv(clothesParam,colorParam,pictureArea);
             //add pictures based on filter parameters here (pictureArea.add())
         });
 
@@ -68,6 +63,23 @@ public class SampleClosetView extends VerticalLayout {
         mainStuff.add(clothesSelect, colorsSelect, filterButton,uploadButton);
 
         add(new TopBar(),mainStuff,pictureArea);
+    }
+
+    public void addImagesToDiv(String clothesParam, String colorParam, HorizontalLayout pictureArea){
+        Map<String,String> images = discoveryService.getImageFileNames(clothesParam,colorParam);
+        for(String imageFileName : images.keySet()){
+            VerticalLayout picture = new VerticalLayout();
+            Image image = new Image(s3Service.getImageUrl(imageFileName),"");
+            image.setWidth("300px");
+            image.setHeight("300px");
+            picture.add(image);
+            picture.add(new Button("Delete",e->{
+                discoveryService.deleteClothing(images.get(imageFileName));
+                s3Service.deleteImage(imageFileName);
+            }));
+
+            pictureArea.add(picture);
+        }
     }
 
 }

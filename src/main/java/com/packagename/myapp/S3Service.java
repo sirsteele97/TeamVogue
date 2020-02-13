@@ -32,4 +32,8 @@ public class S3Service {
         return "https://team-vogue-images.s3.us-east-2.amazonaws.com/"+fileName;
     }
 
+    public void deleteImage(String fileName) {
+        s3.deleteObject("team-vogue-images",fileName);
+    }
+
 }
