@@ -108,7 +108,7 @@ class ImageUploaderService implements ImageUploaderServiceInterface {
             // Upload image to the database.
             Database.Image imageToUpload = new Database.Image(1);
             imageToUpload.SetImage(imageData,extension);
-            int imageID = DatabaseFunctions.DBImages.CreateImage(imageToUpload);
+            int imageID = DatabaseFunctions.DBImages.CreateImage(new Database.Image(1));
 
             // Run visual recognition and upload to Discovery.
             Map<String,String> metadata = new HashMap<>();
