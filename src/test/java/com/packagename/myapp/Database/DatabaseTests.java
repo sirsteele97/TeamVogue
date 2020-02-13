@@ -107,7 +107,7 @@ public class DatabaseTests {
     public void ReturnSelectedImages() {
         CanConnect();
         List<Image> images = DatabaseFunctions.DBImages.SelectImages(1);
-        Assert.assertTrue(images.size() == 1);
+        Assert.assertTrue(images.size() > 1);
     }
 
     @Test
@@ -139,4 +139,5 @@ public class DatabaseTests {
         DatabaseFunctions.DBImages.UpdateImage(image2,"12345" );
         Assert.assertTrue(DatabaseFunctions.DBImages.ConfirmImage(image));
     }
-}
+    }
+

@@ -8,11 +8,6 @@ import armdb.*;
 
 public class DatabaseFunctions {
 
-    static String url = "jdbc:mysql://198.187.29.149:22/masohtdc_TeamVogue";
-    static String username = "masohtdc_sirsteele97";
-    static String password = "FD80E683B904F2D41508DF7A9ED2C7DF2B181DD7";
-    static String husername = "masohtdc";
-    static String hpassword = "Steele97*";
     static ConnectHost con = null;
 
     static int CurrentUserID = 0;
