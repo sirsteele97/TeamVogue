@@ -107,17 +107,20 @@ class ImageUploaderService implements ImageUploaderServiceInterface {
             Database.Image imageToUpload = new Database.Image(1);
             imageToUpload.SetImage(imageData,extension);
             int imageID = DatabaseFunctions.DBImages.CreateImage(imageToUpload);
+            if(imageID == -1){
+                throw new IOException("Failure to upload to Database");
+            } else {
+                // Run visual recognition and upload to Discovery.
+                Map<String, String> metadata = new HashMap<>();
+                metadata.put("UserID", "1");
+                metadata.put("ImageID", String.valueOf(imageID));
 
-            // Run visual recognition and upload to Discovery.
-            Map<String,String> metadata = new HashMap<>();
-            metadata.put("UserID","1");
-            metadata.put("ImageID",String.valueOf("411424"));
-
-            String featureJSON = runVisualRecognition(buffer.getInputStream(fileName),g);
-            // This ensures that the JSON file name will usually always be unique.
-            String JSONFileName =  metadata.get("UserID") + "-" + metadata.get("ImageID");
-            String uploadResponse = uploadFeatureJSONToDiscovery(featureJSON, JSONFileName, g.toJson(metadata));
-            System.out.println(uploadResponse);
+                String featureJSON = runVisualRecognition(buffer.getInputStream(fileName), g);
+                // This ensures that the JSON file name will usually always be unique.
+                String JSONFileName = metadata.get("UserID") + "-" + metadata.get("ImageID");
+                String uploadResponse = uploadFeatureJSONToDiscovery(featureJSON, JSONFileName, g.toJson(metadata));
+                System.out.println(uploadResponse);
+            }
         }
     }
 
