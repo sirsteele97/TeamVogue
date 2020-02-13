@@ -1,16 +1,25 @@
 package com.packagename.myapp;
 
+<<<<<<< HEAD
 import com.vaadin.flow.component.Component;
+=======
+>>>>>>> fae35909a077e92dba9cdb7c5a38bd667ed53a88
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+<<<<<<< HEAD
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+=======
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.formlayout.FormLayout;
+>>>>>>> fae35909a077e92dba9cdb7c5a38bd667ed53a88
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
@@ -18,6 +27,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+<<<<<<< HEAD
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.InputStreamFactory;
@@ -41,6 +51,13 @@ import Database.DatabaseFunctions;
 
 import javax.imageio.ImageIO;
 import javax.xml.transform.stream.StreamSource;
+=======
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.PWA;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.text.Normalizer;
+>>>>>>> fae35909a077e92dba9cdb7c5a38bd667ed53a88
 
 import static java.lang.System.out;
 /**
@@ -56,6 +73,7 @@ import static java.lang.System.out;
  * browser tab/window.
  */
 @Route(value="closet")
+<<<<<<< HEAD
 
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
@@ -86,6 +104,14 @@ public class ClosetView extends FormLayout {
         }
 
         return toLoad;
+=======
+@StyleSheet("./styles/closet-text-field-styles.css")
+@CssImport("./styles/shared-styles.css")
+@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
+public class ClosetView extends FormLayout {
+    static Image[] loadImages(){
+        return new Image[10];
+>>>>>>> fae35909a077e92dba9cdb7c5a38bd667ed53a88
     }
     /**
      * Construct a new Vaadin view.
@@ -95,6 +121,7 @@ public class ClosetView extends FormLayout {
      * @param service The message service. Automatically injected Spring managed bean.
      */
 
+<<<<<<< HEAD
     public ClosetView(@Autowired GreetService guest, ImageUploaderServiceInterface service) {
         //set up filter presets
         ArrayList<String> clothes = new ArrayList<String>();
@@ -154,6 +181,21 @@ public class ClosetView extends FormLayout {
         //adds everything to the view
         add(title,home,mainstuff,pictureArea);
 
+=======
+    public ClosetView(@Autowired GreetService service) {
+        H1 title=new H1("Closet");
+        //title.setHeight("200px");
+        //title.setWidth("100px");
+        Button home= new Button(new Icon(VaadinIcon.HOME));
+        Button upload = new Button(new Icon(VaadinIcon.UPLOAD));
+
+        Image[] imgarray=new Image[10];
+        add(title,home);
+        for (int i=0; i<10; i++){
+            imgarray[i]=new Image("https://dummyimage.com/600x400/000/fff", "DummyImage");
+            add(imgarray[i]);
+        }
+>>>>>>> fae35909a077e92dba9cdb7c5a38bd667ed53a88
         //to load images
 
         add(upload);
