@@ -1,16 +1,23 @@
 package com.packagename.myapp;
 
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import static java.lang.System.out;
 /**
  * A sample Vaadin view class.
  * <p>
@@ -23,15 +30,14 @@ import org.springframework.beans.factory.annotation.Autowired;
  * A new instance of this class is created for every new user and every
  * browser tab/window.
  */
-@Route
-@PWA(name = "Vaadin Application",
-        shortName = "Vaadin App",
-        description = "This is an example Vaadin application.",
-        enableInstallPrompt = true)
+@Route(value="closet")
+@StyleSheet("./styles/closet-text-field-styles.css")
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
-public class MainView extends VerticalLayout {
-
+public class ClosetView extends FormLayout {
+    static Image[] loadImages(){
+        return new Image[10];
+    }
     /**
      * Construct a new Vaadin view.
      * <p>
@@ -39,27 +45,41 @@ public class MainView extends VerticalLayout {
      *
      * @param service The message service. Automatically injected Spring managed bean.
      */
-    public MainView(@Autowired GreetService service) {
 
-        // Use TextField for standard text input
-        TextField textField = new TextField("Your name");
+    public ClosetView(@Autowired GreetService service) {
+        H1 title=new H1("Closet");
+        //title.setHeight("200px");
+        //title.setWidth("100px");
+        Button home= new Button(new Icon(VaadinIcon.HOME));
+        Button upload = new Button(new Icon(VaadinIcon.UPLOAD));
 
+        Image[] imgarray=new Image[10];
+        add(title,home);
+        for (int i=0; i<10; i++){
+            imgarray[i]=new Image("https://dummyimage.com/600x400/000/fff", "DummyImage");
+            add(imgarray[i]);
+        }
+        //to load images
+
+        add(upload);
+
+
+        
         // Button click listeners can be defined as lambda expressions
-        Button button = new Button("Say hello",
-                e -> Notification.show(service.greet(textField.getValue())));
+
+                //e -> Notification.show(service.greet(textField.getValue()));
 
         // Theme variants give you predefined extra styles for components.
         // Example: Primary button is more prominent look.
-        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        //lo.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         // You can specify keyboard shortcuts for buttons.
         // Example: Pressing enter in this view clicks the Button.
-        button.addClickShortcut(Key.ENTER);
+        //button.addClickShortcut(Key.ENTER);
 
         // Use custom CSS classes to apply styling. This is defined in shared-styles.css.
         addClassName("centered-content");
 
-        add(textField, button);
     }
 
 }

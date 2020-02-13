@@ -100,11 +100,17 @@ public class DatabaseFunctions {
         public static int SelectSingleImage(Image image) {
             QueryResult qr = null;
             SQLQuery query = new SQLQuery(con);
-            String username = "";
+
             try {
                 qr = query.statement("select * from Images;");        //execution of query statement
-                while (qr.nextFlag()) {                               //setting flag to next row till next row exists
-                    if (qr.getValue("image").equals(image.GetImage()) && Integer.parseInt(qr.getValue("User_ID")) == (image.GetUserID())) {
+                while (qr.nextFlag()) {
+                    String img1 = qr.getValue("image");
+                    String img2 = image.GetImage();
+                    boolean b = false;
+                    if(img1.length() > 99){
+                        b = img1.substring(1,100).equals(img2.substring(1,100));
+                    }
+                    if (b) {
                         image.SetImgID(Integer.valueOf(qr.getValue("Img_ID")));
                     }
 
