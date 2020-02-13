@@ -1,11 +1,16 @@
 package com.packagename.myapp;
 
+import Database.DatabaseFunctions;
+import com.packagename.myapp.GreetService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.charts.model.Navigator;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
@@ -40,26 +45,31 @@ public class MainView extends VerticalLayout {
      * @param service The message service. Automatically injected Spring managed bean.
      */
     public MainView(@Autowired GreetService service) {
+        TextField textFieldName = new TextField("Username");
+        PasswordField passwordField = new PasswordField("Password");
 
-        // Use TextField for standard text input
-        TextField textField = new TextField("Your name");
+        Button button = new Button("Log In");
+        button.addClickListener(
+                e -> {
+                    if(DatabaseFunctions.DBAccounts.ConfirmCredentials(textFieldName.getValue(), passwordField.getValue())) {
+                        //Successful Login
+                        button.getUI().ifPresent(ui -> ui.navigate("closet"));
+                    }
 
-        // Button click listeners can be defined as lambda expressions
-        Button button = new Button("Say hello",
-                e -> Notification.show(service.greet(textField.getValue())));
+                    //Unsuccessful Login
+                    Notification notification = new Notification(
+                            "Invalid credentials.", 3000, Notification.Position.MIDDLE);
+                    notification.open();
+                });
 
-        // Theme variants give you predefined extra styles for components.
-        // Example: Primary button is more prominent look.
+        //cosmetics
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        // You can specify keyboard shortcuts for buttons.
-        // Example: Pressing enter in this view clicks the Button.
-        button.addClickShortcut(Key.ENTER);
+        Div mainStuff = new Div();
+        mainStuff.setClassName("centered-content");
 
-        // Use custom CSS classes to apply styling. This is defined in shared-styles.css.
-        addClassName("centered-content");
+        mainStuff.add(textFieldName, passwordField, button);
 
-        add(textField, button);
+        add(new TopBar(), mainStuff);
     }
-
 }
