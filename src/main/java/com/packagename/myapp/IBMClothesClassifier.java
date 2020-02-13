@@ -46,7 +46,7 @@ public class IBMClothesClassifier implements IClothesClassifier {
                 }
             }
 
-            attributes.put(cr.getName(),topClass);
+            attributes.put(cr.getName().replace(" ",""),topClass);
         }
 
         return attributes;
