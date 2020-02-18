@@ -1,6 +1,10 @@
-package com.packagename.myapp;
+package com.packagename.myapp.Views;
 
 import com.google.gson.Gson;
+import com.packagename.myapp.Components.TopBar;
+import com.packagename.myapp.Services.Interfaces.IClothesClassifier;
+import com.packagename.myapp.Services.Interfaces.IClothesStorage;
+import com.packagename.myapp.Services.Interfaces.IImageStorage;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -31,9 +35,9 @@ public class ImageUploadView extends VerticalLayout {
      * <p>
      * Build the initial UI state for the user uploading an image.
      *
-     * @param service The service for image uploading.
+     * @param clothesStorageService The service for image uploading.
      */
-    public ImageUploadView(@Autowired DiscoveryService service, @Autowired S3Service s3Service, @Autowired IBMClothesClassifier classifier) {
+    public ImageUploadView(@Autowired IClothesStorage clothesStorageService, @Autowired IImageStorage imageStorageService, @Autowired IClothesClassifier clothesClassifierService) {
         // Add basic upload button.
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
@@ -47,13 +51,15 @@ public class ImageUploadView extends VerticalLayout {
                 IOUtils.copy(buffer.getInputStream(), baos);
                 byte[] bytes = baos.toByteArray();
 
-                s3Service.uploadImage(new ByteArrayInputStream(bytes),event.getFileName());
-                Map<String,String> visualRecognitionFeatures = classifier.getClothingAttributes(new ByteArrayInputStream(bytes));
-                System.out.print(visualRecognitionFeatures.get("ClothModel")+" , "+visualRecognitionFeatures.get("ColorModel"));
-                visualRecognitionFeatures.put("FileName",event.getFileName());
-                String json = new Gson().toJson(visualRecognitionFeatures);
-                System.out.println(json);
-                service.addClothing(json);
+                Map<String,String> uploadResults = imageStorageService.uploadImage(new ByteArrayInputStream(bytes),event.getFileName());
+
+                Map<String,String> clothingDocument = clothesClassifierService.getClothingAttributes(new ByteArrayInputStream(bytes));
+                clothingDocument.put("ImageLink",uploadResults.get("ImageLink"));
+                clothingDocument.put("DeleteKey",uploadResults.get("DeleteKey"));
+                String json = new Gson().toJson(clothingDocument);
+
+                clothesStorageService.addClothing(json);
+
                 upload.getUI().ifPresent(ui -> ui.navigate("closet"));
             } catch (IOException e) {
                 e.printStackTrace();
