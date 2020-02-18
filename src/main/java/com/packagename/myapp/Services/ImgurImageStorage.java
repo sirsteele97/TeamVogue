@@ -3,6 +3,7 @@ package com.packagename.myapp.Services;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.packagename.myapp.Services.Interfaces.IImageStorage;
+import com.packagename.myapp.Utils.KeyHolder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class ImgurImageStorage implements IImageStorage {
 
     private final String baseUrl = "https://api.imgur.com/3";
+    private final String clientId = KeyHolder.getKey("imgur.clientId");
 
     public Map<String,String> uploadImage(InputStream inputStream, String fileName) {
         Map<String,String> uploadResults = new HashMap<String,String>();
@@ -40,7 +42,7 @@ public class ImgurImageStorage implements IImageStorage {
             HttpClient client = HttpClients.createDefault();
 
             HttpPost request = new HttpPost(baseUrl+"/image");
-            request.addHeader("Authorization","Client-ID b500e55905d781a");
+            request.addHeader("Authorization","Client-ID "+ clientId);
             StringEntity image = new StringEntity(json, ContentType.APPLICATION_JSON);
             request.setEntity(image);
 
@@ -62,7 +64,7 @@ public class ImgurImageStorage implements IImageStorage {
             HttpClient client = HttpClients.createDefault();
 
             HttpDelete request = new HttpDelete(baseUrl+"/image/"+deleteKey);
-            request.addHeader("Authorization","Client-ID b500e55905d781a");
+            request.addHeader("Authorization","Client-ID "+clientId);
 
             client.execute(request);
         } catch (IOException e) {
