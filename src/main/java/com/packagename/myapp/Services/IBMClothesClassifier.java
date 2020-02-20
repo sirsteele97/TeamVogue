@@ -1,4 +1,4 @@
-package com.packagename.myapp;
+package com.packagename.myapp.Services;
 
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.visual_recognition.v3.VisualRecognition;
@@ -6,7 +6,8 @@ import com.ibm.watson.visual_recognition.v3.model.ClassResult;
 import com.ibm.watson.visual_recognition.v3.model.ClassifiedImages;
 import com.ibm.watson.visual_recognition.v3.model.ClassifierResult;
 import com.ibm.watson.visual_recognition.v3.model.ClassifyOptions;
-import com.packagename.myapp.IClothesClassifier;
+import com.packagename.myapp.Services.Interfaces.IClothesClassifier;
+import com.packagename.myapp.Utils.KeyHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -17,11 +18,14 @@ import java.util.Map;
 @Service
 public class IBMClothesClassifier implements IClothesClassifier {
 
+    private final String key = KeyHolder.getKey("ibm.visualrecognition.apiKey");
+    private final String url = "https://api.us-south.visual-recognition.watson.cloud.ibm.com/instances/e8a1af7f-a932-462f-94e6-addcbd5a69da";
+
     @Override
     public Map<String, String> getClothingAttributes(InputStream image) {
-        IamAuthenticator authenticator = new IamAuthenticator("q9uDUDKNf8JX0yQOFlqbVhk4U-LCJzYsa43apUDvJvBb");
+        IamAuthenticator authenticator = new IamAuthenticator(key);
         VisualRecognition visualRecognition = new VisualRecognition("2018-03-19", authenticator);
-        visualRecognition.setServiceUrl("https://api.us-south.visual-recognition.watson.cloud.ibm.com/instances/e8a1af7f-a932-462f-94e6-addcbd5a69da");
+        visualRecognition.setServiceUrl(url);
 
         ClassifyOptions classifyOptions = new ClassifyOptions.Builder()
                 .imagesFile(image)

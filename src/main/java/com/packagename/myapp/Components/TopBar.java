@@ -1,4 +1,4 @@
-package com.packagename.myapp;
+package com.packagename.myapp.Components;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
