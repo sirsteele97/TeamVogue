@@ -1,4 +1,4 @@
-package com.packagename.myapp;
+package com.packagename.myapp.Components;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -19,7 +19,7 @@ public class TopBar extends Div {
         outfitButton.setClassName("topBarButton");
 
         Button styleButton = new Button("Find Your Style");
-        styleButtonButton.addClickListener(e -> closetButton.getUI().ifPresent(ui->ui.navigate("style")));
+        styleButton.addClickListener(e -> closetButton.getUI().ifPresent(ui->ui.navigate("style")));
         styleButton.setClassName("topBarButton");
 
         Button signOutButton = new Button("Sign Out");
