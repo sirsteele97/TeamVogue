@@ -1,5 +1,6 @@
-package com.packagename.myapp;
+package com.packagename.myapp.Views;
 
+import com.packagename.myapp.Components.TopBar;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -19,16 +20,8 @@ import java.util.Map;
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class OutfitView extends VerticalLayout {
-
-    private DiscoveryService discoveryService;
-    private S3Service s3Service;
-
-    public OutfitView(@Autowired DiscoveryService discoveryService, @Autowired S3Service s3Service) {
-        this.discoveryService = discoveryService;
-        this.s3Service = s3Service;
-
+    public OutfitView() {
         Button button = new Button("OUTFIT");
-
         add(new TopBar(), button);
     }
 }
