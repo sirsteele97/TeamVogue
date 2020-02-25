@@ -48,10 +48,9 @@ public class ClosetBackupView extends FormLayout {
      * <p>
      * Build the initial UI state for the user accessing the application.
      *
-     * @param service The message service. Automatically injected Spring managed bean.
      */
 
-    public ClosetBackupView(@Autowired GreetService service) {
+    public ClosetBackupView() {
         //set up filter presets
         ArrayList<String> clothes = new ArrayList<String>();
         clothes.add("long sleeve shirt");
