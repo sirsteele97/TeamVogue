@@ -19,7 +19,7 @@ import java.util.List;
 public class DatabaseTests {
 
 
-    @Test
+   /* @Test
     public void CanConnect() {
         DatabaseFunctions.Connect();
 
@@ -102,3 +102,14 @@ public class DatabaseTests {
 
     }
 
+    @Test
+    public void TestUpdateImage() {
+        CanConnect();
+        Image image = new Image(1, "12345");
+        Image image2 = new Image(1, "890765");
+        DatabaseFunctions.DBImages.UpdateImage(image, "890765");
+        Assert.assertTrue(DatabaseFunctions.DBImages.ConfirmImage(image2));
+        DatabaseFunctions.DBImages.UpdateImage(image2,"12345" );
+        Assert.assertTrue(DatabaseFunctions.DBImages.ConfirmImage(image));
+    }*/
+}
