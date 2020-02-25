@@ -10,7 +10,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 
 public class MainViewIT extends AbstractViewTest {
 
-    @Test
+   /* @Test
     public void clickingButtonShowsNotification() {
         Assert.assertFalse($(NotificationElement.class).exists());
 
@@ -34,5 +34,5 @@ public class MainViewIT extends AbstractViewTest {
     public void buttonIsUsingLumoTheme() {
         WebElement element = $(ButtonElement.class).first();
         assertThemePresentOnElement(element, Lumo.class);
-    }
+    }*/
 }

@@ -27,7 +27,7 @@ import com.vaadin.testbench.parallel.ParallelTest;
  * <a href="https://vaadin.com/docs/v10/testbench/testbench-overview.html">Vaadin TestBench</a>.
  */
 public abstract class AbstractViewTest extends ParallelTest {
-    private static final int SERVER_PORT = 8080;
+    /*private static final int SERVER_PORT = 8080;
 
     private final String route;
     private final By rootSelector;
@@ -43,9 +43,9 @@ public abstract class AbstractViewTest extends ParallelTest {
     protected AbstractViewTest(String route, By rootSelector) {
         this.route = route;
         this.rootSelector = rootSelector;
-    }
+    }*/
 
-    @Before
+    /*@Before
     public void setup() throws Exception {
         if (isUsingHub()) {
             super.setup();
@@ -53,7 +53,7 @@ public abstract class AbstractViewTest extends ParallelTest {
             setDriver(TestBench.createDriver(new ChromeDriver()));
         }
         getDriver().get(getURL(route));
-    }
+    }*/
 
     /**
      * Convenience method for getting the root element of the view based on
@@ -61,9 +61,9 @@ public abstract class AbstractViewTest extends ParallelTest {
      *
      * @return the root element
      */
-    protected WebElement getRootElement() {
+    /*protected WebElement getRootElement() {
         return findElement(rootSelector);
-    }
+    }*/
 
     /**
      * Asserts that the given {@code element} is rendered using a theme
@@ -73,7 +73,7 @@ public abstract class AbstractViewTest extends ParallelTest {
      * @param element       web element to check for the theme
      * @param themeClass    theme class (such as {@code Lumo.class}
      */
-    protected void assertThemePresentOnElement(
+    /*protected void assertThemePresentOnElement(
             WebElement element, Class<? extends AbstractTheme> themeClass) {
         String themeName = themeClass.getSimpleName().toLowerCase();
         Boolean hasStyle = (Boolean) executeScript("" +
@@ -86,22 +86,22 @@ public abstract class AbstractViewTest extends ParallelTest {
         Assert.assertTrue("Element '" + element.getTagName() + "' should have" +
                         " had theme '" + themeClass.getSimpleName() + "'.",
                 hasStyle);
-    }
+    }*/
 
     /**
      * Property set to true when running on a test hub.
      */
-    private static final String USE_HUB_PROPERTY = "test.use.hub";
+    //private static final String USE_HUB_PROPERTY = "test.use.hub";
 
     /**
      * Returns deployment host name concatenated with route.
      *
      * @return URL to route
      */
-    private static String getURL(String route) {
+    /*private static String getURL(String route) {
         return String.format("http://%s:%d/%s", getDeploymentHostname(),
                 SERVER_PORT, route);
-    }
+    }*/
 
     /**
      * Returns whether we are using a test hub. This means that the starter
@@ -110,17 +110,17 @@ public abstract class AbstractViewTest extends ParallelTest {
      *
      * @return whether we are using a test hub
      */
-    private static boolean isUsingHub() {
+    /*private static boolean isUsingHub() {
         return Boolean.TRUE.toString().equals(
                 System.getProperty(USE_HUB_PROPERTY));
-    }
+    }*/
 
     /**
      * If running on CI, get the host name from environment variable HOSTNAME
      *
      * @return the host name
      */
-    private static String getDeploymentHostname() {
+    /*private static String getDeploymentHostname() {
         return isUsingHub() ? System.getenv("HOSTNAME") : "localhost";
-    }
+    }*/
 }
