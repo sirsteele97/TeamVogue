@@ -15,12 +15,12 @@ public class TopBar extends Div {
         closetButton.setClassName("topBarButton");
 
         Button outfitButton = new Button("Outfit Evaluator");
-        closetButton.addClickListener(e -> closetButton.getUI().ifPresent(ui->ui.navigate("outfit")));
-        closetButton.setClassName("topBarButton");
+        outfitButton.addClickListener(e -> closetButton.getUI().ifPresent(ui->ui.navigate("outfit")));
+        outfitButton.setClassName("topBarButton");
 
         Button styleButton = new Button("Find Your Style");
-        closetButton.addClickListener(e -> closetButton.getUI().ifPresent(ui->ui.navigate("style")));
-        closetButton.setClassName("topBarButton");
+        styleButtonButton.addClickListener(e -> closetButton.getUI().ifPresent(ui->ui.navigate("style")));
+        styleButton.setClassName("topBarButton");
 
         Button signOutButton = new Button("Sign Out");
         signOutButton.addClickListener(e -> signOutButton.getUI().ifPresent(ui->ui.navigate("")));
