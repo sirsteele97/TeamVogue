@@ -1,8 +1,7 @@
 package com.packagename.myapp;
 
 import armdb.SQLQueryException;
-import com.packagename.myapp.NNDataGenerator.Generator;
-import com.packagename.myapp.Utils.KeyHolder;
+import com.packagename.myapp.NNDataGenerator.OutfitTestGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -20,7 +19,7 @@ public class Application extends SpringBootServletInitializer {
         //KeyHolder.loadKeys();
 
 
-        Generator g = new Generator();
+        OutfitTestGenerator g = new OutfitTestGenerator();
         Scanner sc = new Scanner(System.in);
         System.out.println("Type A to start the server, B to populate TestData!");
         String s = sc.nextLine();
