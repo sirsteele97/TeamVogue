@@ -1,8 +1,12 @@
 package com.packagename.myapp.NNDataGenerator;
 
 import com.packagename.myapp.Services.IBMClothesClassifier;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 
 public class OutfitTestGenerator {
@@ -18,10 +22,12 @@ public class OutfitTestGenerator {
     static List<List> OutfitMatrix;
 
     File Clothes;
+    File Backup;
 
     public OutfitTestGenerator() {
-        Clothes = new File("Clothes.txt");
-
+        Clothes = new File("src/main/java/com/packagename/myapp/NNDataGenerator/Clothes");
+        Backup = new File("src/main/java/com/packagename/myapp/NNDataGenerator/BackupClothes");
+        cc = new IBMClothesClassifier();
         attributes = new HashMap<String , String>();
         Shirts = new ArrayList<String>();
         Pants = new ArrayList<String>();
@@ -33,23 +39,23 @@ public class OutfitTestGenerator {
 
     //given a folder path, will run through all images and populate Clothes file
     //will overwrite existing document
-    public void RunGenerator(String Path) {
+    public void RunGenerator(String Path)  {
         File path = new File(Path);
-        FileInputStream fileInputStream;
-        File [] files = path.listFiles();
-        
-        for (int i = 0; i < files.length; i++){
-            if (files[i].isFile()){
-                try{
-                    fileInputStream = new FileInputStream(files[i]);
-                    AddTestImages(fileInputStream);
 
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+        try{
+            File [] files = path.listFiles();
+
+            for (int i = 0; i < files.length; i++){
+                if (files[i].isFile()){
+                    AddTestImages(new FileInputStream(files[i]));
+                    System.out.println("Processed image:" + i);
                 }
-
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
         //uploads the new arrays to Clothes.txt
         UploadToDoc();
     }
@@ -62,19 +68,19 @@ public class OutfitTestGenerator {
                 Scanner sc = new Scanner(Clothes);
                 String s;
                 s = sc.nextLine();
-                if (s == "Pants") {
+                if (s.equals("Pants")) {
                     s = sc.nextLine();
-                    while (s != "Shirt") {
+                    while (!s.equals("Shirt")) {
                         Pants.add(s);
                         s = sc.nextLine();
                     }
                     //populates shirts
-                    while (s != "Shoes") {
+                    while (!s.equals("Shoes")) {
                         Shirts.add(s);
                         s = sc.nextLine();
                     }
                     //populates shoes
-                    while (s != "Dress") {
+                    while (!s.equals("Dress")) {
                         Shoes.add(s);
                         s = sc.nextLine();
                     }
@@ -92,16 +98,26 @@ public class OutfitTestGenerator {
     }
 
     private void AddTestImages(InputStream image){
-
+        cc = new IBMClothesClassifier();
         attributes = cc.getClothingAttributes(image);
-        if(attributes.containsKey("Type")){
+
+        if(!attributes.isEmpty()){
+
+            try{
+                PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(Backup, true)));
+                writer.println(attributes.toString());
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             if(attributes.get("ClothModel").toLowerCase().equals("pants") ||
                     attributes.get("ClothModel").toLowerCase().equals("shorts") ||
                     attributes.get("ClothModel").toLowerCase().equals("skirt")){
 
                 Pants.add(attributes.get("ColorModel"));
 
-            }else if(attributes.get("ClothModel").toLowerCase().equals("shirt") ||
+            }else if(attributes.get("ClothModel").toLowerCase().equals("short sleeve shirt") ||
                     attributes.get("ClothModel").toLowerCase().equals("long sleeve shirt")){
 
                 Shirts.add(attributes.get("ColorModel"));
@@ -117,25 +133,27 @@ public class OutfitTestGenerator {
 
     public void UploadToDoc() {
         try{
-            FileWriter writer = new FileWriter(Clothes);
-            writer.write("Pants");
+            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(Clothes, false)));
+            writer.println("Pants");
             for (Iterator it = Pants.iterator(); it.hasNext(); ) {
-                writer.write((String) it.next());
+                writer.println((String) it.next());
             }
 
-            writer.write("Shirt");
+            writer.println("Shirt");
             for (Iterator it = Shirts.iterator(); it.hasNext(); ) {
-                writer.write((String) it.next());
+                writer.println((String) it.next());
             }
-            writer.write("Shoes");
+            writer.println("Shoes");
             for (Iterator it = Shoes.iterator(); it.hasNext(); ) {
-                writer.write((String) it.next());
+                writer.println((String) it.next());
             }
-            writer.write("Dress");
+            writer.println("Dress");
             for (Iterator it = Dress.iterator(); it.hasNext(); ) {
-                writer.write((String) it.next());
+                writer.println((String) it.next());
             }
+
             writer.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -153,10 +171,10 @@ public class OutfitTestGenerator {
         for(int i = 0; i < num; i++){
             Random rand = new Random();
             Random rand2 = new Random();
-            if(rand2.nextInt(8) > 3) {
+            if(rand2.nextInt(8) > 3 || Dress.isEmpty()) {
                  p = Pants.get(rand.nextInt(Pants.size()));
                  s = Shirts.get(rand.nextInt(Shirts.size()));
-                 sh = Shoes.get(rand.nextInt(Pants.size()));
+                 sh = Shoes.get(rand.nextInt(Shoes.size()));
             }else{
                  sh = Shoes.get(rand.nextInt(Pants.size()));
                  d = Dress.get(rand.nextInt(Shirts.size()));
@@ -164,31 +182,31 @@ public class OutfitTestGenerator {
 
             List<Integer> outfit = new ArrayList<Integer>();
 
-            if(p == "White" || s=="White" || sh=="White"|| d=="White"){
+            if(p.equals("white") || s.equals("white") || sh.equals("white")|| d.equals("white")){
                 outfit.add(1);
             }else{
                 outfit.add(0);
             }
 
-            if(p == "Black" || s=="Black" || sh=="Black"|| d=="Black"){
+            if(p.equals("black") || s.equals("black") || sh.equals("black")|| d.equals("black")){
                 outfit.add(1);
             }else{
                 outfit.add(0);
             }
 
-            if(p == "Red" || s=="Red" || sh=="Red"|| d=="Red"){
+            if(p.equals("red") || s.equals("red") || sh.equals("red")|| d.equals("red")){
                 outfit.add(1);
             }else{
                 outfit.add(0);
             }
 
-            if(p == "Blue" || s=="Blue" || sh=="Blue"|| d=="Blue"){
+            if(p.equals("blue") || s.equals("blue") || sh.equals("blue")|| d.equals("blue")){
                 outfit.add(1);
             }else{
                 outfit.add(0);
             }
 
-            if(p == "Green" || s=="Green" || sh=="Green"|| d=="Green"){
+            if(p.equals("green") || s.equals("green") || sh.equals("green")|| d.equals("green")){
                 outfit.add(1);
             }else{
                 outfit.add(0);

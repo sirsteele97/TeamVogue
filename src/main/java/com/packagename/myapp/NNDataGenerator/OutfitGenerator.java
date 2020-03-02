@@ -7,88 +7,53 @@ import java.util.*;
 
 public class OutfitGenerator {
 
-    enum colors {Red, Blue, Green, Yellow, Black, White}
+    static List<Map<String,String>> ClothingItems;
+    List<Integer> Outfit;
 
-    IBMClothesClassifier cc;
-    Map<String, String> attributes;
-    static List<String> Shirts;
-    static List<String> Pants;
-    static List<String> Dress;
-    static List<String> Shoes;
-    static List<Integer> Outfit;
+    private int OutfitSize = 5;
 
     public OutfitGenerator() {
-
-        attributes = new HashMap<String, String>();
-        Shirts = new ArrayList<String>();
-        Pants = new ArrayList<String>();
-        Dress = new ArrayList<String>();
-        Shoes = new ArrayList<String>();
+        ClothingItems = new ArrayList<Map<String,String>>();
         Outfit = new ArrayList<Integer>();
     }
 
-    private void AddImages(InputStream image) {
-
-        attributes = cc.getClothingAttributes(image);
-        if (attributes.containsKey("Type")) {
-            if (attributes.get("ClothModel").toLowerCase().equals("pants") ||
-                    attributes.get("ClothModel").toLowerCase().equals("shorts") ||
-                    attributes.get("ClothModel").toLowerCase().equals("skirt")) {
-
-                Pants.add(attributes.get("ColorModel"));
-
-            } else if (attributes.get("ClothModel").toLowerCase().equals("shirt") ||
-                    attributes.get("ClothModel").toLowerCase().equals("long sleeve shirt")) {
-
-                Shirts.add(attributes.get("ColorModel"));
-            } else if (attributes.get("ClothModel").toLowerCase().equals("shoes")) {
-
-                Shoes.add(attributes.get("ColorModel"));
-            } else if (attributes.get("ClothModel").toLowerCase().equals("dress")) {
-
-                Dress.add(attributes.get("ColorModel"));
-            }
+    private void InitializeOutfitArray(){
+        Outfit.clear();
+        for(int i = 0; i < OutfitSize; i++){
+            Outfit.add(i, 0);
         }
+    }
+
+    private void AddImages(Map<String,String> ClothingItem) {
+        ClothingItems.add(ClothingItem);
+    }
+
+    private void ClearImages() {
+        ClothingItems.clear();
     }
 
     //Returns a matrix of randomized outfits based on the inputted data
     public void GetOutfit() {
+        InitializeOutfitArray();
+        for(int i = 0; i < ClothingItems.size(); i++){
+            for(int j = 0; j < OutfitSize; i++){
+                if(ClothingItems.get(i).get("ColorModel").equals("white")){
+                    Outfit.set(j, 1);
+                }
+                if(ClothingItems.get(i).get("ColorModel").equals("black")){
+                    Outfit.set(j, 1);
+                }
+                if(ClothingItems.get(i).get("ColorModel").equals("red")){
+                    Outfit.set(j, 1);
+                }
+                if(ClothingItems.get(i).get("ColorModel").equals("blue")){
+                    Outfit.set(j, 1);
+                }
+                if(ClothingItems.get(i).get("ColorModel").equals("green")){
+                    Outfit.set(j, 1);
+                }
+            }
 
-        String p = "";
-        String s = "";
-        String sh = "";
-        String d = "";
-
-        List<Integer> outfit = new ArrayList<Integer>();
-
-        if (p == "White" || s == "White" || sh == "White" || d == "White") {
-            outfit.add(1);
-        } else {
-            outfit.add(0);
-        }
-
-        if (p == "Black" || s == "Black" || sh == "Black" || d == "Black") {
-            outfit.add(1);
-        } else {
-            outfit.add(0);
-        }
-
-        if (p == "Red" || s == "Red" || sh == "Red" || d == "Red") {
-            outfit.add(1);
-        } else {
-            outfit.add(0);
-        }
-
-        if (p == "Blue" || s == "Blue" || sh == "Blue" || d == "Blue") {
-            outfit.add(1);
-        } else {
-            outfit.add(0);
-        }
-
-        if (p == "Green" || s == "Green" || sh == "Green" || d == "Green") {
-            outfit.add(1);
-        } else {
-            outfit.add(0);
         }
 
     }
