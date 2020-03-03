@@ -6,7 +6,6 @@ import com.packagename.myapp.Services.Interfaces.IClothesClassifier;
 import com.packagename.myapp.Services.Interfaces.IClothesStorage;
 import com.packagename.myapp.Services.Interfaces.IImageStorage;
 import com.packagename.myapp.Utils.ClothingOptions;
-import com.packagename.myapp.Utils.SessionData;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -21,7 +20,6 @@ import com.vaadin.flow.router.Route;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -67,11 +65,9 @@ public class ImageUploadView extends VerticalLayout {
 
                 Map<String,String> uploadResults = imageStorageService.uploadImage(new ByteArrayInputStream(bytes),event.getFileName());
 
-                Map<String,String> clothingDocument = clothesClassifierService.getClothingAttributes(uploadResults.get("ImageLink"));
+                Map<String,String> clothingDocument = clothesClassifierService.getClothingAttributes(new ByteArrayInputStream(bytes));
                 clothingDocument.put("ImageLink",uploadResults.get("ImageLink"));
                 clothingDocument.put("DeleteKey",uploadResults.get("DeleteKey"));
-                clothingDocument.put("Username", SessionData.getAttribute("Username"));
-                clothingDocument.put("Probability",".5");
 
                 createVerification(clothingDocument,mainStuff);
             } catch (IOException e) {
