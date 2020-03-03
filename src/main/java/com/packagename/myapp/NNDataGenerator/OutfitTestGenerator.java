@@ -21,11 +21,9 @@ public class OutfitTestGenerator {
     static List<String> Shoes;
     static List<List> OutfitMatrix;
 
-    File Clothes;
     File Backup;
 
     public OutfitTestGenerator() {
-        Clothes = new File("src/main/java/com/packagename/myapp/NNDataGenerator/Clothes");
         Backup = new File("src/main/java/com/packagename/myapp/NNDataGenerator/BackupClothes");
         cc = new IBMClothesClassifier();
         attributes = new HashMap<String , String>();
@@ -34,18 +32,18 @@ public class OutfitTestGenerator {
         Dress = new ArrayList<String>();
         Shoes = new ArrayList<String>();
         OutfitMatrix = new ArrayList<List>();
-        PopulateTestArrays();
+
     }
 
     //given a folder path, will run through all images and populate Clothes file
     //will overwrite existing document
-    public void RunGenerator(String Path)  {
+    public void RunGenerator(String Path, int StartingIndex)  {
         File path = new File(Path);
 
         try{
             File [] files = path.listFiles();
 
-            for (int i = 0; i < files.length; i++){
+            for (int i = StartingIndex; i < files.length; i++){
                 if (files[i].isFile()){
                     AddTestImages(new FileInputStream(files[i]));
                     System.out.println("Processed image:" + i);
@@ -54,40 +52,41 @@ public class OutfitTestGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-
-        //uploads the new arrays to Clothes.txt
-        UploadToDoc();
+    public Map<String, String> Convert(String str) {
+        String s = str.substring(1, str.length()-1);
+        String[] tokens = s.split(", |=");
+        Map<String, String> map = new HashMap<>();
+        for (int i=0; i<tokens.length-1; ) map.put(tokens[i++], tokens[i++]);
+        return map;
     }
 
     //call only to refill the test data
     public void PopulateTestArrays(){
-        if(Clothes.length() != 0) {
+        Map<String, String> clothingItem = new HashMap<String, String>();
+        if(Backup.length() != 0) {
             //Initializes arrays if read data already exists
             try {
-                Scanner sc = new Scanner(Clothes);
+                Scanner sc = new Scanner(Backup);
                 String s;
-                s = sc.nextLine();
-                if (s.equals("Pants")) {
+                while(sc.hasNext()){
                     s = sc.nextLine();
-                    while (!s.equals("Shirt")) {
-                        Pants.add(s);
-                        s = sc.nextLine();
-                    }
-                    //populates shirts
-                    while (!s.equals("Shoes")) {
-                        Shirts.add(s);
-                        s = sc.nextLine();
-                    }
-                    //populates shoes
-                    while (!s.equals("Dress")) {
-                        Shoes.add(s);
-                        s = sc.nextLine();
-                    }
-                    //populates Dresses
-                    while (sc.hasNext()) {
-                        s = sc.nextLine();
-                        Dress.add(s);
+                    clothingItem = Convert(s);
+                    if(clothingItem.get("ClothModel").equals("short sleeve shirt")){
+                        Shirts.add(clothingItem.get("ColorModel"));
+                    }else if(clothingItem.get("ClothModel").equals("long sleeve shirt")){
+                        Shirts.add(clothingItem.get("ColorModel"));
+                    }else if(clothingItem.get("ClothModel").equals("shorts")){
+                        Pants.add(clothingItem.get("ColorModel"));
+                    }else if(clothingItem.get("ClothModel").equals("skirt")){
+                        Pants.add(clothingItem.get("ColorModel"));
+                    }else if(clothingItem.get("ClothModel").equals("pants")){
+                        Pants.add(clothingItem.get("ColorModel"));
+                    }else if(clothingItem.get("ClothModel").equals("dress")){
+                        Dress.add(clothingItem.get("ColorModel"));
+                    }else if(clothingItem.get("ClothModel").equals("shoes")){
+                        Shoes.add(clothingItem.get("ColorModel"));
                     }
                 }
                 sc.close();
@@ -102,7 +101,6 @@ public class OutfitTestGenerator {
         attributes = cc.getClothingAttributes(image);
 
         if(!attributes.isEmpty()){
-
             try{
                 PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(Backup, true)));
                 writer.println(attributes.toString());
@@ -110,54 +108,7 @@ public class OutfitTestGenerator {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            if(attributes.get("ClothModel").toLowerCase().equals("pants") ||
-                    attributes.get("ClothModel").toLowerCase().equals("shorts") ||
-                    attributes.get("ClothModel").toLowerCase().equals("skirt")){
-
-                Pants.add(attributes.get("ColorModel"));
-
-            }else if(attributes.get("ClothModel").toLowerCase().equals("short sleeve shirt") ||
-                    attributes.get("ClothModel").toLowerCase().equals("long sleeve shirt")){
-
-                Shirts.add(attributes.get("ColorModel"));
-            }else if(attributes.get("ClothModel").toLowerCase().equals("shoes")){
-
-                Shoes.add(attributes.get("ColorModel"));
-            }else if(attributes.get("ClothModel").toLowerCase().equals("dress")){
-
-                Dress.add(attributes.get("ColorModel"));
-            }
         }
-    }
-
-    public void UploadToDoc() {
-        try{
-            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(Clothes, false)));
-            writer.println("Pants");
-            for (Iterator it = Pants.iterator(); it.hasNext(); ) {
-                writer.println((String) it.next());
-            }
-
-            writer.println("Shirt");
-            for (Iterator it = Shirts.iterator(); it.hasNext(); ) {
-                writer.println((String) it.next());
-            }
-            writer.println("Shoes");
-            for (Iterator it = Shoes.iterator(); it.hasNext(); ) {
-                writer.println((String) it.next());
-            }
-            writer.println("Dress");
-            for (Iterator it = Dress.iterator(); it.hasNext(); ) {
-                writer.println((String) it.next());
-            }
-
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     //Returns a matrix of randomized outfits based on the inputted data

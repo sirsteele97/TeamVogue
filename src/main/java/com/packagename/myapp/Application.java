@@ -27,7 +27,11 @@ public class Application extends SpringBootServletInitializer {
             OutfitTestGenerator g = new OutfitTestGenerator();
             System.out.println("Type path to the file with photos!");
             s = sc.nextLine();
-            g.RunGenerator(s);
+            System.out.println("Type file index you wish to start at, if this is the first go type 0. (This is used if there was an error in processing files so " +
+                    "you didn't have to start from the first pic again.");
+            int i = Integer.parseInt(sc.nextLine());
+            g.RunGenerator(s, i);
+            g.PopulateTestArrays();
             System.out.println("Generator is populated");
         }else{
             SpringApplication.run(Application.class, args);
