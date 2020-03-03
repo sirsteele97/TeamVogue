@@ -38,7 +38,7 @@ public class StyleView extends VerticalLayout {
         //PICTURE
         FlexLayout pictureArea = new FlexLayout();
         pictureArea.setWrapMode(FlexLayout.WrapMode.WRAP);//turn byte[] into Image
-        pictureArea.add(new Image(new StreamResource("", () -> new ByteArrayInputStream(clothesStorageService.getRandomPic())), ""));
+        //pictureArea.add(new Image(new StreamResource("", () -> new ByteArrayInputStream(clothesStorageService.getRandomPic())), ""));
         pictureArea.addClassName("centered-content");
 
         //USER REACTIONS
@@ -50,14 +50,14 @@ public class StyleView extends VerticalLayout {
             {
                 updateNN(1);
                 pictureArea.removeAll();
-                pictureArea.add(new Image(new StreamResource("", () -> new ByteArrayInputStream(clothesStorageService.getRandomPic())), ""));
+                //pictureArea.add(new Image(new StreamResource("", () -> new ByteArrayInputStream(clothesStorageService.getRandomPic())), ""));
             });
         Label b = new Label("I don't care");
         b.addClassName("yellow");
         b.addAttachListener(e ->
         {
             pictureArea.removeAll();
-            pictureArea.add(new Image(new StreamResource("", () -> new ByteArrayInputStream(clothesStorageService.getRandomPic())), ""));
+            //pictureArea.add(new Image(new StreamResource("", () -> new ByteArrayInputStream(clothesStorageService.getRandomPic())), ""));
         });
         Label c = new Label("I don't like it");
         c.addClassName("red");
@@ -65,7 +65,7 @@ public class StyleView extends VerticalLayout {
         {
             updateNN(-1);
             pictureArea.removeAll();
-            pictureArea.add(new Image(new StreamResource("", () -> new ByteArrayInputStream(clothesStorageService.getRandomPic())), ""));
+            //pictureArea.add(new Image(new StreamResource("", () -> new ByteArrayInputStream(clothesStorageService.getRandomPic())), ""));
         });
         Div space1 = new Div();
         Div space2 = new Div();
