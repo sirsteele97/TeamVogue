@@ -1,4 +1,4 @@
-
+package com.packagename.myapp.neuralNet;
 
 public class ClassifierNet {
     NeuronCls[] firstlayer=new NeuronCls[3];

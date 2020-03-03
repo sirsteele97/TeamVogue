@@ -1,3 +1,5 @@
+package com.packagename.myapp.neuralNet;
+
 public class NeuronCls {
     double[] weights;
     public NeuronCls(double [] w){

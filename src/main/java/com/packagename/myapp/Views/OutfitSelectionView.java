@@ -4,7 +4,7 @@ import com.packagename.myapp.Components.TopBar;
 import com.packagename.myapp.NNDataGenerator.OutfitGenerator;
 import com.packagename.myapp.Services.Interfaces.IClothesStorage;
 import com.packagename.myapp.Services.Interfaces.IImageStorage;
-import com.packagename.myapp.neuralNet.IBMNeuralNetwork;
+import com.packagename.myapp.neuralNet.ClassifierNet;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.HtmlComponent;
 import com.vaadin.flow.component.Text;
@@ -35,14 +35,14 @@ public class OutfitSelectionView extends VerticalLayout {
     private Map<String,Map<String,String>> clothes;
     private String[] outfitKeys;
 
-    private IBMNeuralNetwork neuralNetwork;
+    private ClassifierNet neuralNetwork;
     private OutfitGenerator g;
 
     public OutfitSelectionView(@Autowired IClothesStorage clothesStorageService, @Autowired IImageStorage imageStorageService) {
         this.clothesStorageService = clothesStorageService;
         this.imageStorageService = imageStorageService;
 
-        neuralNetwork = new IBMNeuralNetwork();
+        neuralNetwork = new ClassifierNet();
         g = new OutfitGenerator();
 
         setup();

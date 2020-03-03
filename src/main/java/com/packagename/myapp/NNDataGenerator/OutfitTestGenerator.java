@@ -133,19 +133,13 @@ public class OutfitTestGenerator {
 
             List<Integer> outfit = new ArrayList<Integer>();
 
-            if(p.equals("white") || s.equals("white") || sh.equals("white")|| d.equals("white")){
-                outfit.add(1);
-            }else{
-                outfit.add(0);
-            }
-
-            if(p.equals("black") || s.equals("black") || sh.equals("black")|| d.equals("black")){
-                outfit.add(1);
-            }else{
-                outfit.add(0);
-            }
-
             if(p.equals("red") || s.equals("red") || sh.equals("red")|| d.equals("red")){
+                outfit.add(1);
+            }else{
+                outfit.add(0);
+            }
+
+            if(p.equals("green") || s.equals("green") || sh.equals("green")|| d.equals("green")){
                 outfit.add(1);
             }else{
                 outfit.add(0);
@@ -157,7 +151,13 @@ public class OutfitTestGenerator {
                 outfit.add(0);
             }
 
-            if(p.equals("green") || s.equals("green") || sh.equals("green")|| d.equals("green")){
+            if(p.equals("black") || s.equals("black") || sh.equals("black")|| d.equals("black")){
+                outfit.add(1);
+            }else{
+                outfit.add(0);
+            }
+
+            if(p.equals("white") || s.equals("white") || sh.equals("white")|| d.equals("white")){
                 outfit.add(1);
             }else{
                 outfit.add(0);
