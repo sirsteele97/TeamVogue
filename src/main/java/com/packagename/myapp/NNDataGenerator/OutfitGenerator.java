@@ -7,55 +7,55 @@ import java.util.*;
 
 public class OutfitGenerator {
 
-    static List<Map<String,String>> ClothingItems;
-    List<Integer> Outfit;
+    List<Map<String,String>> ClothingItems;
+    double[] Outfit;
 
     private int OutfitSize = 5;
 
     public OutfitGenerator() {
         ClothingItems = new ArrayList<Map<String,String>>();
-        Outfit = new ArrayList<Integer>();
+        Outfit = new double[6];
     }
 
-    private void InitializeOutfitArray(){
-        Outfit.clear();
+    public void InitializeOutfitArray(){
+        Outfit = new double[6];
         for(int i = 0; i < OutfitSize; i++){
-            Outfit.add(i, 0);
+            Outfit[i] =  0.;
         }
     }
 
-    private void AddImages(Map<String,String> ClothingItem) {
+    public void AddImages(Map<String,String> ClothingItem) {
         ClothingItems.add(ClothingItem);
     }
 
-    private void ClearImages() {
+    public void ClearImages() {
         ClothingItems.clear();
     }
 
     //Returns a matrix of randomized outfits based on the inputted data
-    public void GetOutfit() {
+    public double[] GetOutfit() {
         InitializeOutfitArray();
-        for(int i = 0; i < ClothingItems.size(); i++){
-            for(int j = 0; j < OutfitSize; i++){
-                if(ClothingItems.get(i).get("ColorModel").equals("white")){
-                    Outfit.set(j, 1);
-                }
-                if(ClothingItems.get(i).get("ColorModel").equals("black")){
-                    Outfit.set(j, 1);
-                }
+        for(int i = 0; i < ClothingItems.size()-1; i++){
+            for(int j = 0; j < OutfitSize; j++){
                 if(ClothingItems.get(i).get("ColorModel").equals("red")){
-                    Outfit.set(j, 1);
-                }
-                if(ClothingItems.get(i).get("ColorModel").equals("blue")){
-                    Outfit.set(j, 1);
+                    Outfit[j] = 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("green")){
-                    Outfit.set(j, 1);
+                    Outfit[j] = 1.;
+                }
+                if(ClothingItems.get(i).get("ColorModel").equals("blue")){
+                    Outfit[j] = 1.;
+                }
+                if(ClothingItems.get(i).get("ColorModel").equals("black")){
+                    Outfit[j] = 1.;
+                }
+                if(ClothingItems.get(i).get("ColorModel").equals("white")){
+                    Outfit[j] = 1.;
                 }
             }
 
         }
-
+        return this.Outfit;
     }
 
 }

@@ -1,3 +1,5 @@
+package com.packagename.myapp.neuralNet;
+
 import java.lang.*;
 public class Neuron {
     double[] weights;

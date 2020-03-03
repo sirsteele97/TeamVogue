@@ -1,10 +1,13 @@
 package com.packagename.myapp.Views;
 
 import com.packagename.myapp.Components.TopBar;
+import com.packagename.myapp.NNDataGenerator.OutfitGenerator;
 import com.packagename.myapp.Services.Interfaces.IClothesStorage;
 import com.packagename.myapp.Services.Interfaces.IImageStorage;
+import com.packagename.myapp.neuralNet.IBMNeuralNetwork;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.HtmlComponent;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -32,9 +35,15 @@ public class OutfitSelectionView extends VerticalLayout {
     private Map<String,Map<String,String>> clothes;
     private String[] outfitKeys;
 
+    private IBMNeuralNetwork neuralNetwork;
+    private OutfitGenerator g;
+
     public OutfitSelectionView(@Autowired IClothesStorage clothesStorageService, @Autowired IImageStorage imageStorageService) {
         this.clothesStorageService = clothesStorageService;
         this.imageStorageService = imageStorageService;
+
+        neuralNetwork = new IBMNeuralNetwork();
+        g = new OutfitGenerator();
 
         setup();
     }
@@ -128,9 +137,13 @@ public class OutfitSelectionView extends VerticalLayout {
         showOutfit.add(shoeImage);
 
         //Mason added: matrix generator for Neural Network and get response
-        //Something like this:
-        //String colorsMatchComment = neuralNetworkService.getResponse(clothes.get(outfitKeys[0]),clothes.get(outfitKeys[1]),clothes.get(outfitKeys[2]));
-        //showOutfit.add(new Text(colorsMatchComment));
+        g.AddImages(clothes.get(outfitKeys[0]));
+        g.AddImages(clothes.get(outfitKeys[1]));
+        g.AddImages(clothes.get(outfitKeys[2]));
+
+        //Mason added: gets outfit as double array and returns from the nn a string on outfit quality
+        String colorsMatchComment = neuralNetwork.judge(g.GetOutfit());
+        showOutfit.add(new Text(colorsMatchComment));
 
         showOutfit.add(new HtmlComponent("br"));
         showOutfit.add(new HtmlComponent("br"));

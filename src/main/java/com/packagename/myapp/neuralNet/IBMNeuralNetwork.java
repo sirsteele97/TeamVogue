@@ -1,4 +1,4 @@
-
+package com.packagename.myapp.neuralNet;
 
 public class IBMNeuralNetwork {
     Neuron[] firstlayer=new Neuron[3];
@@ -37,6 +37,7 @@ public class IBMNeuralNetwork {
         }
         return judgement;
     }
+    /*
     public void backpropagation(double desired, double[] inputs, double learning_rate){
         double []modifinput=new double[inputs.length];
         double []changeweight2=new double[secondlayer[0].weights.length];
@@ -61,4 +62,6 @@ public class IBMNeuralNetwork {
             firstlayer[i].update_weights(changeweight1);
         }
     }
+    */
+
 }
