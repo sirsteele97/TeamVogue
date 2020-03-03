@@ -165,10 +165,18 @@ public class DatabaseFunctions {
             SQLQuery query = new SQLQuery(con);
             try {
                 qr = query.statement("select * from Images");
+
+                String img1 = qr.getValue("image");
+                String img2 = image.GetImage();
+                boolean b = false;
+                if(img1.length() > 99){
+                    b = img1.substring(1,100).equals(img2.substring(1,100));
+                }
+
                 while (qr.nextFlag()) {                               //setting flag to next row till next row exists
                     //print column_1 & column_2 value of row where flag is set
 
-                    if (Integer.parseInt(qr.getValue("Img_ID")) == image.GetImgID() || qr.getValue("Image").equals(image.GetImage())) {
+                    if (Integer.parseInt(qr.getValue("Img_ID")) == image.GetImgID() || b) {
                         confirmed = true;
                     }
                 }

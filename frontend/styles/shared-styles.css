@@ -10,6 +10,10 @@
   max-width: 250px;
 }
 
+.centered-text {
+    text-align:center;
+}
+
 .topBar {
     width: 100%;
     background-color: #1676F3;

@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface IClothesStorage {
 
-    Map<String,Map<String,String>> getClothes(String colorParam, String clothesParam);
+    Map<String,Map<String,String>> getClothes(String clothesParam, String colorParam);
 
     void addClothing(String json);
 

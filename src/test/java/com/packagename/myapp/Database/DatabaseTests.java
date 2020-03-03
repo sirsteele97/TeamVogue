@@ -89,16 +89,43 @@ public class DatabaseTests {
         Assert.assertTrue(DatabaseFunctions.DBAccounts.ConfirmCredentials("Sirsteele97", "Steele97"));
     }
 
+    @Test
+    public void ReturnSelectedImage() {
+        CanConnect();
+        Image img = DatabaseFunctions.DBImages.SelectSingleImage(1);
+        Assert.assertTrue(img.GetImage().equals("12345"));
+    }
 
+    @Test
+    public void ReturnSelectedImageID() {
+        CanConnect();
+        Image image = new Image(1, "12345");
+        int id = DatabaseFunctions.DBImages.SelectSingleImage(image);
+        Assert.assertTrue(id == 1);
+    }
     @Test
     public void ReturnSelectedImages() {
         CanConnect();
         List<Image> images = DatabaseFunctions.DBImages.SelectImages(1);
-        Assert.assertTrue(images.size() > 1);
+        Assert.assertTrue(images.size() == 1);
+    }
+
+    @Test
+    public void TestConfirmImage() {
+        CanConnect();
+        Image image = new Image(1, "12345");
+        Assert.assertTrue(DatabaseFunctions.DBImages.ConfirmImage(image));
     }
 
 
-
+    @Test
+    public void TestAddAndDeleteImage() {
+        CanConnect();
+        Image image = new Image(1, "4567");
+        int id = DatabaseFunctions.DBImages.CreateImage(image);
+        Assert.assertTrue(DatabaseFunctions.DBImages.ConfirmImage(image));
+        DatabaseFunctions.DBImages.DeleteImage(id);
+        Assert.assertFalse(DatabaseFunctions.DBImages.ConfirmImage(image));
 
     }
 
