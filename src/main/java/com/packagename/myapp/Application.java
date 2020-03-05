@@ -22,15 +22,13 @@ public class Application extends SpringBootServletInitializer {
 
         Scanner sc = new Scanner(System.in);
         System.out.println("Type A to start the server, B to populate TestData!");
-        String s = sc.nextLine();
-        if(s.toUpperCase().equals("B")){
+        if(sc.nextLine().toUpperCase().equals("B")){
             OutfitTestGenerator g = new OutfitTestGenerator();
             System.out.println("Type path to the file with photos!");
-            s = sc.nextLine();
             System.out.println("Type file index you wish to start at, if this is the first go type 0. (This is used if there was an error in processing files so " +
                     "you didn't have to start from the first pic again.");
             int i = Integer.parseInt(sc.nextLine());
-            g.RunGenerator(s, i);
+            g.RunGenerator(sc.nextLine(), i);
             g.PopulateTestArrays();
             System.out.println("Generator is populated");
         }else{
