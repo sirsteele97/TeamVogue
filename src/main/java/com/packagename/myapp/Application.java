@@ -27,13 +27,13 @@ public class Application extends SpringBootServletInitializer {
 
         System.out.println(network.score(new float[]{.1f,.1f})[0]);
 
-        for(int i=0;i<10000000;i++){
-            float a=(float)(Math.random());
-            float b=(float)(Math.random());
+        for(int i=0;i<1000000;i++){
+            float a=(i/100000f)*.5f;
+            float b=.5f;
             float sum = a+b;
             network.fit(new float[]{sum},new float[]{a,b});
         }
-        System.out.println(network.score(new float[]{10f,2f})[0]);
+        System.out.println(network.score(new float[]{.1f,.1f})[0]);
 
 
         //KeyHolder.loadKeys();
