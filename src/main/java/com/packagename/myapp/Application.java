@@ -1,7 +1,8 @@
 package com.packagename.myapp;
 
 import armdb.SQLQueryException;
-import com.packagename.myapp.NNDataGenerator.OutfitTestGenerator;
+import com.packagename.myapp.NeuralNet.Layer;
+import com.packagename.myapp.NeuralNet.NeuralNetwork;
 import com.packagename.myapp.Utils.KeyHolder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,24 +19,25 @@ import java.util.Scanner;
 public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws SQLException, SQLQueryException {
-        KeyHolder.loadKeys();
+        NeuralNetwork network = new NeuralNetwork();
+        network.addLayer(new Layer(2));
+        network.addLayer(new Layer(1));
 
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Type A to start the server, B to populate TestData!");
-        String s = sc.nextLine();
-        if(s.toUpperCase().equals("B")){
-            OutfitTestGenerator g = new OutfitTestGenerator();
-            System.out.println("Type path to the file with photos!");
-            s = sc.nextLine();
-            System.out.println("Type file index you wish to start at, if this is the first go type 0. (This is used if there was an error in processing files so " +
-                    "you didn't have to start from the first pic again.");
-            int i = Integer.parseInt(sc.nextLine());
-            g.RunGenerator(s, i);
-            g.PopulateTestArrays();
-            System.out.println("Generator is populated");
-        }else{
-            SpringApplication.run(Application.class, args);
+        network.init();
+
+        System.out.println(network.score(new float[]{.1f,.1f})[0]);
+
+        for(int i=0;i<10000000;i++){
+            float a=(float)(Math.random());
+            float b=(float)(Math.random());
+            float sum = a+b;
+            network.fit(new float[]{sum},new float[]{a,b});
         }
+        System.out.println(network.score(new float[]{10f,2f})[0]);
+
+
+        //KeyHolder.loadKeys();
+        //SpringApplication.run(Application.class, args);
     }
 
 }
