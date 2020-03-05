@@ -36,25 +36,23 @@ public class OutfitGenerator {
     public double[] GetOutfit() {
         InitializeOutfitArray();
         for(int i = 0; i < ClothingItems.size()-1; i++){
-            for(int j = 0; j < OutfitSize; j++){
                 if(ClothingItems.get(i).get("ColorModel").equals("red")){
-                    Outfit[j] = 1.;
+                    Outfit[0] = 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("green")){
-                    Outfit[j] = 1.;
+                    Outfit[1] = 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("blue")){
-                    Outfit[j] = 1.;
+                    Outfit[2] = 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("black")){
-                    Outfit[j] = 1.;
+                    Outfit[3] = 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("white")){
-                    Outfit[j] = 1.;
+                    Outfit[4] = 1.;
                 }
             }
-
-        }
+        ClothingItems = new ArrayList<Map<String,String>>();
         return this.Outfit;
     }
 
