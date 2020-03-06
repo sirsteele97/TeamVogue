@@ -7,14 +7,12 @@ import java.util.List;
 
 public class NeuralNetwork {
     private List<Layer> layers;
-    private TransformFunction transformFunction;
     private CostFunction costFunction;
 
     private float learningRate;
 
     public NeuralNetwork(){
         layers = new ArrayList<Layer>();
-        transformFunction = new SigmoidTransformFunction();
         costFunction = new RSSCostFunction();
         learningRate = .1f;
     }
@@ -28,21 +26,15 @@ public class NeuralNetwork {
     public float[] score(float[] input){
         layers.get(0).setActivations(input);
         for(int i=1;i<layers.size();i++){
-            layers.get(i).updateActivations(transformFunction);
+            layers.get(i).updateActivations();
         }
         return layers.get(layers.size()-1).getActivations();
     }
 
     public void fit(float[] target, float[] input){
-        float[] actual = score(input);
-        float[] sigmas = layers.get(layers.size()-1).getSigmas();
-        float[] errors = new float[target.length];
-        for(int i=0;i<errors.length;i++){
-            errors[i] = costFunction.df(target[i],actual[i])*transformFunction.df(sigmas[i]);
-            layers.get(layers.size()-1).setDeltas(errors);
-        }
+        layers.get(layers.size()-1).calculateDeltas(target,costFunction);
         for(int i=layers.size()-1;i>=1;i--){
-            layers.get(i).updateDeltas(transformFunction);
+            layers.get(i).updateDeltas();
         }
         for(int i=layers.size()-1;i>=1;i--){
             layers.get(i).updateWeights(learningRate);
@@ -51,10 +43,6 @@ public class NeuralNetwork {
 
     public void addLayer(Layer layer){
         layers.add(layer);
-    }
-
-    public void setTransformFunction(TransformFunction transformFunction){
-        this.transformFunction = transformFunction;
     }
 
     public void setCostFunction(CostFunction costFunction){
