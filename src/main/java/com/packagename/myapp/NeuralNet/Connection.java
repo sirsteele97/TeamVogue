@@ -1,11 +1,11 @@
 package com.packagename.myapp.NeuralNet;
 
 class Connection {
-    Neuron to;
+    Neuron from;
     float weight;
 
-    Connection(Neuron to, float weight){
-        this.to = to;
+    Connection(Neuron from, float weight){
+        this.from = from;
         this.weight = weight;
     }
 }

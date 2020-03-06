@@ -1,6 +1,7 @@
 package com.packagename.myapp;
 
 import armdb.SQLQueryException;
+import com.packagename.myapp.NeuralNet.Functions.IdentityTransformFunction;
 import com.packagename.myapp.NeuralNet.Layer;
 import com.packagename.myapp.NeuralNet.NeuralNetwork;
 import com.packagename.myapp.Utils.KeyHolder;
@@ -10,6 +11,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -22,18 +24,24 @@ public class Application extends SpringBootServletInitializer {
         NeuralNetwork network = new NeuralNetwork();
         network.addLayer(new Layer(2));
         network.addLayer(new Layer(1));
+        network.setLearningRate(.1f);
+        network.setTransformFunction(new IdentityTransformFunction());
 
         network.init();
 
-        System.out.println(network.score(new float[]{.1f,.1f})[0]);
+        float x=.3f,y=.4f;
+        System.out.println(network.score(new float[]{x,y})[0]);
 
-        for(int i=0;i<1000000;i++){
-            float a=(i/100000f)*.5f;
-            float b=.5f;
-            float sum = a+b;
-            network.fit(new float[]{sum},new float[]{a,b});
+        /*Random r = new Random();
+        for(int i=0;i<100;i++){
+            float a=(float)Math.random();
+            float b=(float)Math.random();
+            float out = a+b;
+            network.fit(new float[]{out},new float[]{a,b});
         }
-        System.out.println(network.score(new float[]{.1f,.1f})[0]);
+
+        float result = network.score(new float[]{x,y})[0];
+        System.out.println(result);*/
 
 
         //KeyHolder.loadKeys();

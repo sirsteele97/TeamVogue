@@ -1,22 +1,22 @@
 package com.packagename.myapp.NeuralNet;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 class Neuron {
     float sigma;
     float activation;
     float delta;
+    float bias;
 
-    Map<Integer,Neuron> ins;
-    Map<Integer,Connection> outs;
+    List<Connection> connections;
 
-    Neuron(){
+    Neuron(float bias){
         sigma = 0;
         activation = 0;
         delta = 0;
+        this.bias = bias;
 
-        ins = new HashMap<Integer,Neuron>();
-        outs = new HashMap<Integer,Connection>();
+        connections = new LinkedList<Connection>();
     }
 }

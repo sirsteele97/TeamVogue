@@ -11,7 +11,7 @@ public class Layer {
     public Layer(int numberOfNeurons){
         neurons = new ArrayList<Neuron>(numberOfNeurons);
         for(int i=0;i<numberOfNeurons;i++){
-            neurons.add(new Neuron());
+            neurons.add(new Neuron(0f));
         }
     }
 
@@ -20,8 +20,7 @@ public class Layer {
             Neuron current = neurons.get(i);
             for(int j=0;j<fromLayer.neurons.size();j++){
                 Neuron other = fromLayer.neurons.get(j);
-                other.outs.put(i,new Connection(current,(float)(Math.random()*2)-1f));
-                current.ins.put(j,other);
+                current.connections.add(new Connection(other,.5f));
             }
         }
     }
@@ -33,13 +32,12 @@ public class Layer {
     }
 
     void updateActivations(TransformFunction transformFunction){
-        for(int i=0;i<neurons.size();i++){
-            Neuron toUpdate = neurons.get(i);
-            toUpdate.sigma = 0;
-            for(Neuron n: toUpdate.ins.values()){
-                toUpdate.sigma += n.outs.get(i).weight*n.activation;
+        for(Neuron n : neurons){
+            for(Connection conn: n.connections){
+                n.sigma += conn.weight*conn.from.activation;
             }
-            toUpdate.activation = transformFunction.f(toUpdate.sigma);
+            n.sigma += n.bias;
+            n.activation = transformFunction.f(n.sigma);
         }
     }
 
@@ -65,19 +63,23 @@ public class Layer {
         }
     }
 
-    void updateDeltas() {
+    void updateDeltas(TransformFunction transformFunction) {
+        for(Neuron n: neurons) {
+            for (Connection conn : n.connections) {
+                conn.from.delta = 0;
+            }
+        }
         for(Neuron n: neurons){
-            float sum = 0;
-            for(Connection conn : n.outs.values()){
-                sum += conn.to.delta * conn.weight;
+            for(Connection conn : n.connections){
+                conn.from.delta += n.delta*conn.weight*transformFunction.df(conn.from.sigma);
             }
         }
     }
 
     void updateWeights(float learningRate) {
         for(Neuron n : neurons){
-            for(Connection conn : n.outs.values()){
-                conn.weight -= learningRate * conn.to.delta * n.activation;
+            for(Connection conn : n.connections){
+                conn.weight -= learningRate*n.delta*conn.from.activation;
             }
         }
     }

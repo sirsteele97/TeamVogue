@@ -1,9 +1,6 @@
 package com.packagename.myapp.NeuralNet;
 
-import com.packagename.myapp.NeuralNet.Functions.CostFunction;
-import com.packagename.myapp.NeuralNet.Functions.RSSCostFunction;
-import com.packagename.myapp.NeuralNet.Functions.IdentityTransformFunction;
-import com.packagename.myapp.NeuralNet.Functions.TransformFunction;
+import com.packagename.myapp.NeuralNet.Functions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +14,7 @@ public class NeuralNetwork {
 
     public NeuralNetwork(){
         layers = new ArrayList<Layer>();
-        transformFunction = new IdentityTransformFunction();
+        transformFunction = new SigmoidTransformFunction();
         costFunction = new RSSCostFunction();
         learningRate = .1f;
     }
@@ -44,10 +41,10 @@ public class NeuralNetwork {
             errors[i] = costFunction.df(target[i],actual[i])*transformFunction.df(sigmas[i]);
             layers.get(layers.size()-1).setDeltas(errors);
         }
-        for(int i=layers.size()-2;i>=0;i--){
-            layers.get(i).updateDeltas();
+        for(int i=layers.size()-1;i>=1;i--){
+            layers.get(i).updateDeltas(transformFunction);
         }
-        for(int i=layers.size()-2;i>=0;i--){
+        for(int i=layers.size()-1;i>=1;i--){
             layers.get(i).updateWeights(learningRate);
         }
     }
