@@ -9,14 +9,14 @@ class Neuron {
     float delta;
     float bias;
 
-    List<Connection> connections;
+    List<Input> inputs;
 
-    Neuron(float bias){
+    Neuron(){
         sigma = 0;
         activation = 0;
         delta = 0;
         this.bias = bias;
 
-        connections = new LinkedList<Connection>();
+        inputs = new LinkedList<Input>();
     }
 }
