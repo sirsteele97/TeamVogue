@@ -58,6 +58,7 @@ public class NeuralNetwork {
         private float learningRate;
         private float[][][] initialWeights;
         private float[][] initialBiases;
+        private int numberOfInputs;
 
         public Builder(){
             layers = new ArrayList<Layer>();
@@ -66,10 +67,13 @@ public class NeuralNetwork {
             learningRate = .1f;
             initialWeights = null;
             initialBiases = null;
+            numberOfInputs = 0;
         }
 
         public final NeuralNetwork build(){
             if(layers.size() < 2) throw new Error("Need at least two layers!");
+            if(numberOfInputs <= 0) throw new Error("Number of inputs must be greater than 0!");
+            layers.add(0,new Layer(numberOfInputs));
             for(int i=1;i<layers.size();i++){
                 Layer layer = layers.get(i);
                 if(layer.transformFunction == null){
@@ -80,6 +84,11 @@ public class NeuralNetwork {
                         (initialBiases!=null)?initialBiases[i-1]:null);
             }
             return new NeuralNetwork(this);
+        }
+
+        public final Builder setNumberOfInputs(int numberOfInputs){
+            this.numberOfInputs = numberOfInputs;
+            return this;
         }
 
         public final Builder addLayer(Layer layer){

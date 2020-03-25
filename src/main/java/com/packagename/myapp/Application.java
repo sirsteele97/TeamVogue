@@ -31,7 +31,7 @@ public class Application extends SpringBootServletInitializer {
         float[][] initialBiasesArray = gson.fromJson(initialBiases,float[][].class);
 
         NeuralNetwork network = new NeuralNetwork.Builder()
-                .addLayer(new Layer(2))
+                .setNumberOfInputs(2)
                 .addLayer(new Layer(4))
                 .addLayer(new Layer(1))
                 .setDefaultTransformFunction(new SigmoidTransformFunction())
@@ -40,7 +40,7 @@ public class Application extends SpringBootServletInitializer {
                 .setLearningRate(.1f)
                 .build();
 
-        float[] trainingA = new float[10000000];
+        /*float[] trainingA = new float[10000000];
         float[] trainingB = new float[trainingA.length];
 
 
@@ -58,7 +58,7 @@ public class Application extends SpringBootServletInitializer {
             if(a==b) out = 0;
             else out = 1;
             network.train(new float[]{out},new float[]{a,b});
-        }
+        }*/
 
         float result = network.evaluate(new float[]{0f,0f})[0];
         System.out.println(result);
