@@ -86,7 +86,6 @@ public class DiscoveryUserStorage implements IUserStorage {
 
         List<QueryResult> results = response.getResults();
         for(QueryResult doc : results){
-            System.out.println(doc.getId());
             if(BCrypt.checkpw(password,doc.get("Password").toString())){
                 return true;
             }
