@@ -3,9 +3,6 @@ package com.packagename.myapp.NeuralNet;
 import com.packagename.myapp.NeuralNet.Functions.CostFunction;
 import com.packagename.myapp.NeuralNet.Functions.TransformFunction;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Layer {
     Neuron[] neurons;
     TransformFunction transformFunction;
@@ -22,7 +19,7 @@ public class Layer {
             neurons[i].bias = (initialBiases != null)?initialBiases[i]:0f;
             for(int j=0;j<fromLayer.neurons.length;j++){
                 float weight = (initialWeights != null)?initialWeights[i][j]:(float)((Math.random()*(2))-1);
-                neurons[i].inputs.add(new Input(fromLayer.neurons[j],weight));
+                neurons[i].inputs.add(new NeuronInput(fromLayer.neurons[j],weight));
             }
         }
     }
@@ -36,7 +33,7 @@ public class Layer {
     void updateActivations(){
         for(Neuron n : neurons){
             n.sigma = 0;
-            for(Input conn: n.inputs){
+            for(NeuronInput conn: n.inputs){
                 n.sigma += conn.weight*conn.from.activation;
             }
             n.sigma += n.bias;
@@ -60,7 +57,7 @@ public class Layer {
 
     void updateDeltas() {
         for(Neuron n: neurons){
-            for(Input conn : n.inputs){
+            for(NeuronInput conn : n.inputs){
                 conn.from.delta += n.delta*conn.weight*transformFunction.df(conn.from.sigma);
             }
         }
@@ -69,7 +66,7 @@ public class Layer {
     void updateWeights(float learningRate) {
         for(Neuron n : neurons){
             n.bias -= learningRate*n.delta;
-            for(Input conn : n.inputs){
+            for(NeuronInput conn : n.inputs){
                 conn.weight -= learningRate*n.delta*conn.from.activation;
             }
             n.delta = 0;

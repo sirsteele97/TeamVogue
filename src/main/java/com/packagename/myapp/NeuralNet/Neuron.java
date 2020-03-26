@@ -9,7 +9,7 @@ class Neuron {
     float delta;
     float bias;
 
-    List<Input> inputs;
+    List<NeuronInput> inputs;
 
     Neuron(){
         sigma = 0;
@@ -17,6 +17,6 @@ class Neuron {
         delta = 0;
         this.bias = bias;
 
-        inputs = new LinkedList<Input>();
+        inputs = new LinkedList<NeuronInput>();
     }
 }

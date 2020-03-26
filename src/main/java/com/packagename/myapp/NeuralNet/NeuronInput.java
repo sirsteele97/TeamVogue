@@ -1,10 +1,10 @@
 package com.packagename.myapp.NeuralNet;
 
-class Input {
+class NeuronInput {
     Neuron from;
     float weight;
 
-    Input(Neuron from, float weight){
+    NeuronInput(Neuron from, float weight){
         this.from = from;
         this.weight = weight;
     }
