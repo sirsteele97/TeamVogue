@@ -7,6 +7,8 @@ import com.packagename.myapp.NeuralNet.Functions.IdentityTransformFunction;
 import com.packagename.myapp.NeuralNet.Functions.SigmoidTransformFunction;
 import com.packagename.myapp.NeuralNet.Layer;
 import com.packagename.myapp.NeuralNet.NeuralNetwork;
+import com.packagename.myapp.Utils.KeyHolder;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
@@ -23,7 +25,7 @@ import java.util.Random;
 public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws SQLException, SQLQueryException {
-        String initialWeights = "[[[-7.2749615, -6.385663], [2.587251, 4.445902], [-5.4033694, 4.261566], [-1.810219, -4.178541]], [[-12.614047, -7.63313, 6.3037295, 6.5746684]]]";
+        /*String initialWeights = "[[[-7.2749615, -6.385663], [2.587251, 4.445902], [-5.4033694, 4.261566], [-1.810219, -4.178541]], [[-12.614047, -7.63313, 6.3037295, 6.5746684]]]";
         String initialBiases = "[[3.025201, -5.293949, -2.6812415, 4.4179044], [-0.2569598]]";
 
         Gson gson = new Gson();
@@ -40,7 +42,7 @@ public class Application extends SpringBootServletInitializer {
                 .setLearningRate(.1f)
                 .build();
 
-        /*float[] trainingA = new float[10000000];
+        float[] trainingA = new float[10000000];
         float[] trainingB = new float[trainingA.length];
 
 
@@ -58,7 +60,7 @@ public class Application extends SpringBootServletInitializer {
             if(a==b) out = 0;
             else out = 1;
             network.train(new float[]{out},new float[]{a,b});
-        }*/
+        }
 
         float result = network.evaluate(new float[]{0f,0f})[0];
         System.out.println(result);
@@ -72,10 +74,11 @@ public class Application extends SpringBootServletInitializer {
         float[][][] weights = network.getWeights();
         System.out.println(Arrays.deepToString(weights));
         float[][] biases = network.getBiases();
-        System.out.println(Arrays.deepToString(biases));
+        System.out.println(Arrays.deepToString(biases));*/
 
-        //KeyHolder.loadKeys();
-        //SpringApplication.run(Application.class, args);
+
+        KeyHolder.loadKeys();
+        SpringApplication.run(Application.class, args);
     }
 
 }
