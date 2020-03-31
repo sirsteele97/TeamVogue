@@ -1,6 +1,7 @@
 package com.packagename.myapp.Views;
 
 import com.packagename.myapp.Components.TopBar;
+import com.packagename.myapp.NNDataGenerator.OutfitGenerator;
 import com.packagename.myapp.NNDataGenerator.OutfitTestGenerator;
 import com.packagename.myapp.Services.Interfaces.IClothesStorage;
 import com.packagename.myapp.Services.Interfaces.IImageStorage;
@@ -32,6 +33,7 @@ public class StyleView extends VerticalLayout {
 
     private IClothesStorage clothesStorageService;
     private IImageStorage imageStorageService;
+    private double[] OutfitMatrix;
 
     public StyleView(@Autowired IClothesStorage clothesStorageService, @Autowired IImageStorage imageStorageService) {
         this.clothesStorageService = clothesStorageService;
@@ -84,6 +86,14 @@ public class StyleView extends VerticalLayout {
         List<Map<String, String>> generatedOutfit;
         OutfitTestGenerator OTG = new OutfitTestGenerator();
         generatedOutfit = OTG.RunGenerator(clothesStorageService);
+
+        OutfitGenerator OG = new OutfitGenerator();
+        OG.AddImages(generatedOutfit.get(0));
+        OG.AddImages(generatedOutfit.get(1));
+        OG.AddImages(generatedOutfit.get(2));
+
+        //USE THIS TO GIVE TO NN TO EVALAUATE CURRENT RATING
+        OutfitMatrix = OG.GetOutfit();
 
         //PICTURE
         FlexLayout pictureArea = new FlexLayout();
