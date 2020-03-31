@@ -1,5 +1,6 @@
 package com.packagename.myapp.NNDataGenerator;
 
+import com.packagename.myapp.Services.DiscoveryClothesStorage;
 import com.packagename.myapp.Services.IBMClothesClassifier;
 
 import java.io.*;
@@ -37,23 +38,24 @@ public class OutfitGenerator {
         InitializeOutfitArray();
         for(int i = 0; i < ClothingItems.size()-1; i++){
                 if(ClothingItems.get(i).get("ColorModel").equals("red")){
-                    Outfit[0] = 1.;
+                    Outfit[0] =+ 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("green")){
-                    Outfit[1] = 1.;
+                    Outfit[1] =+ 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("blue")){
-                    Outfit[2] = 1.;
+                    Outfit[2] =+ 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("black")){
-                    Outfit[3] = 1.;
+                    Outfit[3] =+ 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("white")){
-                    Outfit[4] = 1.;
+                    Outfit[4] =+ 1.;
                 }
             }
         ClothingItems = new ArrayList<Map<String,String>>();
         return this.Outfit;
     }
+
 
 }

@@ -26,7 +26,7 @@ public class ClassifierNet {
         String judgement;
         double match=run(colors);
         System.out.println(match);
-        if(match<0.5){
+        if(match<0){
             judgement="bad";
         }
         else if(match<3){

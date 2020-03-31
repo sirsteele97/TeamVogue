@@ -1,6 +1,8 @@
 package com.packagename.myapp.NNDataGenerator;
 
+import com.packagename.myapp.Services.DiscoveryClothesStorage;
 import com.packagename.myapp.Services.IBMClothesClassifier;
+import com.packagename.myapp.Services.Interfaces.IClothesStorage;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import org.apache.commons.io.IOUtils;
@@ -15,10 +17,10 @@ public class OutfitTestGenerator {
 
     IBMClothesClassifier cc;
     Map<String,String> attributes;
-    static List<String> Shirts;
-    static List<String> Pants;
-    static List<String> Dress;
-    static List<String> Shoes;
+    static List<Map<String,String>> Shirts;
+    static List<Map<String,String>> Pants;
+    static List<Map<String,String>> Dress;
+    static List<Map<String,String>> Shoes;
     static List<List> OutfitMatrix;
 
     File Backup;
@@ -27,17 +29,17 @@ public class OutfitTestGenerator {
         Backup = new File("src/main/java/com/packagename/myapp/NNDataGenerator/BackupClothes");
         cc = new IBMClothesClassifier();
         attributes = new HashMap<String , String>();
-        Shirts = new ArrayList<String>();
-        Pants = new ArrayList<String>();
-        Dress = new ArrayList<String>();
-        Shoes = new ArrayList<String>();
+        Shirts = new ArrayList<Map<String,String>>();
+        Pants = new ArrayList<Map<String,String>>();
+        Dress = new ArrayList<Map<String,String>>();
+        Shoes = new ArrayList<Map<String,String>>();
         OutfitMatrix = new ArrayList<List>();
 
     }
 
     //given a folder path, will run through all images and populate Clothes file
     //will overwrite existing document
-    public void RunGenerator(String Path, int StartingIndex)  {
+ /*   public void RunGenerator(String Path, int StartingIndex)  {
         File path = new File(Path);
 
         try{
@@ -53,6 +55,45 @@ public class OutfitTestGenerator {
             e.printStackTrace();
         }
     }
+*/
+    public List<Map<String,String>> RunGenerator(IClothesStorage dcs)  {
+        Map<String, Map<String, String>> items = dcs.getClothes("", "");
+
+        for (Map<String,String> clothingItem: items.values()) {
+            if(clothingItem.get("ClothModel").equals("short sleeve shirt")){
+                Shirts.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("long sleeve shirt")){
+                Shirts.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("shorts")){
+                Pants.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("skirt")){
+                Pants.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("pants")){
+                Pants.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("dress")){
+                Dress.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("shoes")){
+                Shoes.add(clothingItem);
+            }
+        }
+
+        Random rand = new Random();
+        Random rand2 = new Random();
+        List<Map<String,String>> clothingItems = new ArrayList<Map<String,String>>();
+
+        if(rand2.nextInt(2) > 1 || Dress.isEmpty()){
+            if(!Shirts.isEmpty() && !Shoes.isEmpty() && !Pants.isEmpty()){
+                clothingItems.add(Shirts.get(rand.nextInt(Shirts.size())));
+                clothingItems.add(Pants.get(rand.nextInt(Pants.size())));
+                clothingItems.add(Shoes.get(rand.nextInt(Shoes.size())));
+            }
+        }else{
+            clothingItems.add(Dress.get(rand.nextInt(Shirts.size())));
+            clothingItems.add(Shoes.get(rand.nextInt(Shoes.size())));
+        }
+
+        return clothingItems;
+    }
 
     public Map<String, String> Convert(String str) {
         String s = str.substring(1, str.length()-1);
@@ -60,8 +101,10 @@ public class OutfitTestGenerator {
         Map<String, String> map = new HashMap<>();
         for (int i=0; i<tokens.length-1; ) map.put(tokens[i++], tokens[i++]);
         return map;
-    }
 
+
+    }
+/*
     //call only to refill the test data
     public void PopulateTestArrays(){
         Map<String, String> clothingItem = new HashMap<String, String>();
@@ -167,5 +210,5 @@ public class OutfitTestGenerator {
         }
         return  OutfitMatrix;
     }
-
+*/
 }
