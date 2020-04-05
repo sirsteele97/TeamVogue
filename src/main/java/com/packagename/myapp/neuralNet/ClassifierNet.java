@@ -3,6 +3,7 @@ package com.packagename.myapp.neuralNet;
 public class ClassifierNet {
     NeuronCls[] firstlayer=new NeuronCls[3];
     NeuronCls[] secondlayer=new NeuronCls[1];
+    int inputNum=6;
     public ClassifierNet(){
         double[] GB= {0.01,1.0,1.0,0.01,0.01,0.5};
         double[] GR= {2.0,2.0,0.01,0.01,0.01,0.5};
