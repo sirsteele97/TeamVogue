@@ -5,6 +5,8 @@ import com.packagename.myapp.NNDataGenerator.OutfitGenerator;
 import com.packagename.myapp.NNDataGenerator.OutfitTestGenerator;
 import com.packagename.myapp.Services.Interfaces.IClothesStorage;
 import com.packagename.myapp.Services.Interfaces.IImageStorage;
+import com.packagename.myapp.neuralNet.ClassifierNet;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.HtmlComponent;
 import com.vaadin.flow.component.Text;
@@ -34,51 +36,13 @@ public class StyleView extends VerticalLayout {
     private IClothesStorage clothesStorageService;
     private IImageStorage imageStorageService;
     private double[] OutfitMatrix;
+    private ClassifierNet neuralNetwork;
 
     public StyleView(@Autowired IClothesStorage clothesStorageService, @Autowired IImageStorage imageStorageService) {
         this.clothesStorageService = clothesStorageService;
         this.imageStorageService = imageStorageService;
 
-        FlexLayout pictureArea = getGeneratedOutfit();
-
-        //USER REACTIONS
-        HorizontalLayout reactionButtons = new HorizontalLayout();
-        reactionButtons.addClassName("horizontal-spacing");
-        Label a = new Label("I like it");
-        a.addClassName("green");
-       /* a.addAttachListener(e ->
-            {
-                updateNN(1);
-                pictureArea.removeAll();
-                //pictureArea.add(new Image(new StreamResource("", () -> new ByteArrayInputStream(clothesStorageService.getRandomPic())), ""));
-            });*/
-        Label b = new Label("I don't care");
-        b.addClassName("yellow");
-        /*b.addAttachListener(e ->
-        {
-            pictureArea.removeAll();
-            //pictureArea.add(new Image(new StreamResource("", () -> new ByteArrayInputStream(clothesStorageService.getRandomPic())), ""));
-        });*/
-        Label c = new Label("I don't like it");
-        c.addClassName("red");
-        /*c.addAttachListener(e ->
-        {
-            updateNN(-1);
-            pictureArea.removeAll();
-            //pictureArea.add(new Image(new StreamResource("", () -> new ByteArrayInputStream(clothesStorageService.getRandomPic())), ""));
-        });*/
-        Div space1 = new Div();
-        Div space2 = new Div();
-        space1.setWidth("100px");
-        space2.setWidth("100px");
-        reactionButtons.add(a, space1, b, space2, c);
-        reactionButtons.addClassName("centered-content");
-
-        add(new TopBar(),pictureArea,reactionButtons);
-    }
-
-    private void updateNN(int x) {
-        //TODO - call method to update NN
+        setup();
     }
 
     private FlexLayout getGeneratedOutfit(){
@@ -92,7 +56,7 @@ public class StyleView extends VerticalLayout {
         OG.AddImages(generatedOutfit.get(1));
         OG.AddImages(generatedOutfit.get(2));
 
-        //USE THIS TO GIVE TO NN TO EVALAUATE CURRENT RATING
+        //USE THIS TO GIVE TO NN TO EVALUATE CURRENT RATING
         OutfitMatrix = OG.GetOutfit();
 
         //PICTURE
@@ -115,5 +79,54 @@ public class StyleView extends VerticalLayout {
         }
         pictureArea.addClassName("centered-content");
         return pictureArea;
+    }
+
+    public void setup(){
+        super.removeAll();
+
+        FlexLayout pictureArea = new FlexLayout();
+        pictureArea.add(getGeneratedOutfit());
+
+        //USER REACTIONS
+        HorizontalLayout reactionButtons = new HorizontalLayout();
+        reactionButtons.setWidth("1700px");
+        //reactionButtons.addClassName("horizontal-spacing");
+        Button a = new Button("I like");
+        a.addClassName("green");
+        a.setHeight("30px");
+        a.setWidth("500px");
+        a.addClickListener(e ->
+        {
+            //neuralNetwork.backpropagation("good", OutfitMatrix , neuralNetwork.LEARNING_RATE);
+            setup();
+        });
+        Button b = new Button("Neutral");
+        b.addClassName("yellow");
+        b.setHeight("30px");
+        b.setWidth("500px");
+        b.addClickListener(e ->
+        {
+            setup();
+        });
+        Button c = new Button("I dislike");
+        c.addClassName("red");
+        c.setHeight("30px");
+        c.setWidth("500px");
+        c.addClickListener(e ->
+        {
+            //neuralNetwork.backpropagation("bad", OutfitMatrix, neuralNetwork.LEARNING_RATE);
+            setup();
+        });
+        Div space1 = new Div();
+        Div space2 = new Div();
+        space1.setWidth("100px");
+        space2.setWidth("100px");
+        reactionButtons.add(a, space1, b, space2, c);
+
+        TopBar topbar = new TopBar();
+
+        Component outfit = pictureArea.getComponentAt(0);
+
+        add(topbar, outfit, reactionButtons);
     }
 }
