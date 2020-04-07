@@ -104,6 +104,14 @@ public class ClassifierNet {
                 patternWeights[i] -= patterns[i] * learning_rate;
             }
         }
+
+        Weights updatedWeights = new Weights();
+        updatedWeights.GB = firstlayer[0].weights;
+        updatedWeights.GR = firstlayer[1].weights;
+        updatedWeights.WB = firstlayer[2].weights;
+        updatedWeights.last = secondlayer[0].weights;
+        updatedWeights.patternWeights = patternWeights;
+        storeWeights(updatedWeights);
     }
 
     /**
