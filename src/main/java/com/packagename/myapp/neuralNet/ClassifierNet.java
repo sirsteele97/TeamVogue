@@ -15,7 +15,6 @@ public class ClassifierNet {
 
     public ClassifierNet(){
         Weights initialWeights = instantiateWeights();
-
         //{red, green, blue, white, black, 0.5}
         double[] GB= initialWeights.GB;
         double[] GR= initialWeights.GR;
@@ -118,11 +117,10 @@ public class ClassifierNet {
      * JSON helper methods and class.
      */
     private Weights instantiateWeights() {
-        String filename = "default_weights.json";
-        File temp = new File("trained_weights.json");
+        String filename = "src/main/java/com/packagename/myapp/neuralNet/trained_weights.json";
+        File temp = new File(filename);
         Weights w = new Weights();
         if(temp.exists()){
-            filename = "trained_weights.json";
             try(Reader reader = new FileReader(filename)){
                 Gson g = new Gson();
                 w = g.fromJson(reader,Weights.class);
@@ -134,7 +132,7 @@ public class ClassifierNet {
     }
 
     private void storeWeights(Weights updatedWeights){
-        try (Writer writer = new FileWriter("trained_weights.json")){
+        try (Writer writer = new FileWriter("src/main/java/com/packagename/myapp/neuralNet/trained_weights.json")){
             Gson gson = new Gson();
             gson.toJson(updatedWeights,Weights.class,writer);
         } catch (IOException e) {
