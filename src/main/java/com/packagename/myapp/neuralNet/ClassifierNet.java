@@ -1,5 +1,9 @@
 package com.packagename.myapp.neuralNet;
 
+import com.google.gson.Gson;
+
+import java.io.*;
+
 public class ClassifierNet {
     public final double LEARNING_RATE = .01;
 
@@ -10,13 +14,16 @@ public class ClassifierNet {
     double[] patternWeights = {0.01, 0.01, 0.01, 0.01, 0.01, 0.5};
 
     public ClassifierNet(){
+        Weights initialWeights = instantiateWeights();
+
         //{red, green, blue, white, black, 0.5}
-        double[] GB= {0.01,1.0,1.0,0.01,0.01,0.5};
-        double[] GR= {2.0,2.0,0.01,0.01,0.01,0.5};
-        double[] WB= {0.01,0.01,0.01,1.0,1.0,0.5};
+        double[] GB= initialWeights.GB;
+        double[] GR= initialWeights.GR;
+        double[] WB= initialWeights.WB;
 
         //last, not sure what its function is
-        double[] last ={1.0,-1.0,2.0,1.0,0.2};
+        double[] last = initialWeights.last;
+        patternWeights = initialWeights.patternWeights;
 
         firstlayer[0]=new NeuronCls(GB);
         firstlayer[1]=new NeuronCls(GR);
@@ -97,5 +104,34 @@ public class ClassifierNet {
                 patternWeights[i] -= patterns[i] * learning_rate;
             }
         }
+    }
+
+    /**
+     * JSON helper methods and class.
+     */
+    private Weights instantiateWeights() {
+        String filename = "default_weights.json";
+        File temp = new File("trained_weights.json");
+        Weights w = new Weights();
+        if(temp.exists()){
+            filename = "trained_weights.json";
+            try(Reader reader = new FileReader(filename)){
+                Gson g = new Gson();
+                w = g.fromJson(reader,Weights.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return w;
+    }
+
+    private void storeWeights(Weights updatedWeights){
+        try (Writer writer = new FileWriter("trained_weights.json")){
+            Gson gson = new Gson();
+            gson.toJson(updatedWeights,Weights.class,writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
