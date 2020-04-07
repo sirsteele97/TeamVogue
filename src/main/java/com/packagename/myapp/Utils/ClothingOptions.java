@@ -11,6 +11,8 @@ public class ClothingOptions {
 
     public final static String[] colors = {"red", "green", "blue", "black", "white"};
 
+    public final static String[] patterns = {"plain", "plaid", "striped", "dotted"};
+
     public static boolean validClothingType(String[] clothingArray, String type){
         for(String element : clothingArray){
             if(element.equalsIgnoreCase(type)){

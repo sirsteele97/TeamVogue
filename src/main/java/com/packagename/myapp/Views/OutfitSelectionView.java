@@ -4,6 +4,8 @@ import com.packagename.myapp.Components.TopBar;
 import com.packagename.myapp.NNDataGenerator.OutfitGenerator;
 import com.packagename.myapp.Services.Interfaces.IClothesStorage;
 import com.packagename.myapp.Services.Interfaces.IImageStorage;
+import com.packagename.myapp.Utils.ClothingOptions;
+import com.packagename.myapp.Utils.SessionData;
 import com.packagename.myapp.neuralNet.ClassifierNet;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.HtmlComponent;
@@ -54,7 +56,7 @@ public class OutfitSelectionView extends VerticalLayout {
         pages = new ArrayList<Div>();
         currentPage = 0;
 
-        clothes = clothesStorageService.getClothes("","");
+        clothes = clothesStorageService.getClothes("","","",SessionData.getAttribute("Username"));
         outfitKeys = new String[3];
 
         //Top selection screen
@@ -66,7 +68,7 @@ public class OutfitSelectionView extends VerticalLayout {
 
         for(String clothId : clothes.keySet()){
             String item = clothes.get(clothId).get("ClothModel");
-            if(item.equalsIgnoreCase("long sleeve shirt") || item.equalsIgnoreCase("short sleeve shirt")){
+            if(ClothingOptions.validClothingType(ClothingOptions.topTypes,item)){
                 topPictureArea.add(createClothingItem(clothId,clothes.get(clothId)));
             }
         }
@@ -84,7 +86,7 @@ public class OutfitSelectionView extends VerticalLayout {
 
         for(String clothId : clothes.keySet()){
             String item = clothes.get(clothId).get("ClothModel");
-            if(item.equalsIgnoreCase("shorts") || item.equalsIgnoreCase("pants") || item.equalsIgnoreCase("skirts")){
+            if(ClothingOptions.validClothingType(ClothingOptions.bottomTypes,item)){
                 bottomPictureArea.add(createClothingItem(clothId,clothes.get(clothId)));
             }
         }
@@ -103,7 +105,7 @@ public class OutfitSelectionView extends VerticalLayout {
 
         for(String clothId : clothes.keySet()){
             String item = clothes.get(clothId).get("ClothModel");
-            if(item.equalsIgnoreCase("shoes")){
+            if(ClothingOptions.validClothingType(ClothingOptions.shoeTypes,item)){
                 shoesPictureArea.add(createClothingItem(clothId,clothes.get(clothId)));
             }
         }

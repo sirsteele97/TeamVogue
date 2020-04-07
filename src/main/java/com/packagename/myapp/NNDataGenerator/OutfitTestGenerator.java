@@ -141,7 +141,7 @@ public class OutfitTestGenerator {
 
     private void AddTestImages(InputStream image){
         cc = new IBMClothesClassifier();
-        attributes = cc.getClothingAttributes(image);
+        attributes = new HashMap<>();//cc.getClothingAttributes(image);
 
         if(!attributes.isEmpty()){
             try{

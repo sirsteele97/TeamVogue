@@ -1,5 +1,6 @@
 package com.packagename.myapp.Components;
 
+import com.packagename.myapp.Utils.SessionData;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
@@ -23,7 +24,10 @@ public class TopBar extends Div {
         styleButton.setClassName("topBarButton");
 
         Button signOutButton = new Button("Sign Out");
-        signOutButton.addClickListener(e -> signOutButton.getUI().ifPresent(ui->ui.navigate("")));
+        signOutButton.addClickListener(e -> {
+            SessionData.setAttribute("Username","");
+            signOutButton.getUI().ifPresent(ui->ui.navigate(""));
+        });
         signOutButton.setClassName("topBarButton");
 
         add(closetButton, outfitButton, styleButton, signOutButton);
