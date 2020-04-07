@@ -5,6 +5,6 @@ import java.util.Map;
 
 public interface IClothesClassifier {
 
-    Map<String, String> getClothingAttributes(InputStream image);
+    Map<String, String> getClothingAttributes(String imageUrl);
 
 }

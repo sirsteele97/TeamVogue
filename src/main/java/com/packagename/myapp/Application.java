@@ -8,8 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * The entry point of the Spring Boot application.
@@ -19,9 +21,7 @@ public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws SQLException, SQLQueryException {
         KeyHolder.loadKeys();
-
-            SpringApplication.run(Application.class, args);
-
+        SpringApplication.run(Application.class, args);
     }
 
 }

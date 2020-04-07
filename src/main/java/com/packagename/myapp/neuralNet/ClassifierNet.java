@@ -12,7 +12,7 @@ public class ClassifierNet {
     NeuronCls[] secondlayer=new NeuronCls[1];
 
     //{solid, stripe, dot, plaid, icon}
-    double[] patternWeights = {0.01, 0.01, 0.01, 0.01, 0.01};
+    double[] patternWeights = {0.01, 0.01, 0.01, 0.01, 0.01, 0.5};
 
     public ClassifierNet(){
         Weights initialWeights = instantiateWeights();

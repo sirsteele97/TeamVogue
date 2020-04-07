@@ -9,19 +9,23 @@ import java.util.*;
 public class OutfitGenerator {
 
     List<Map<String,String>> ClothingItems;
-    double[] Outfit;
+    double[][] Outfit;
 
-    private int OutfitSize = 5;
+    private int OutfitSize = 6;
+    private int ParameterSize = 2;
 
     public OutfitGenerator() {
         ClothingItems = new ArrayList<Map<String,String>>();
-        Outfit = new double[6];
+        Outfit = new double[ParameterSize][OutfitSize];
     }
 
     public void InitializeOutfitArray(){
-        Outfit = new double[6];
-        for(int i = 0; i < OutfitSize; i++){
-            Outfit[i] =  0.;
+        Outfit = new double[ParameterSize][OutfitSize];
+        for(int i = 0; i < ParameterSize; i++){
+            for(int j=0;j < OutfitSize; j++){
+                Outfit[i][j] =  0.;
+            }
+
         }
     }
 
@@ -34,25 +38,44 @@ public class OutfitGenerator {
     }
 
     //Returns a matrix of randomized outfits based on the inputted data
-    public double[] GetOutfit() {
+    public double[][] GetOutfit() {
         InitializeOutfitArray();
         for(int i = 0; i < ClothingItems.size()-1; i++){
                 if(ClothingItems.get(i).get("ColorModel").equals("red")){
-                    Outfit[0] =+ 1.;
+                    Outfit[0][0] =+ 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("green")){
-                    Outfit[1] =+ 1.;
+                    Outfit[0][1] =+ 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("blue")){
-                    Outfit[2] =+ 1.;
+                    Outfit[0][2] =+ 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("black")){
-                    Outfit[3] =+ 1.;
+                    Outfit[0][3] =+ 1.;
                 }
                 if(ClothingItems.get(i).get("ColorModel").equals("white")){
-                    Outfit[4] =+ 1.;
+                    Outfit[0][4] =+ 1.;
                 }
             }
+
+        for(int i = 0; i < ClothingItems.size()-1; i++){
+            if(ClothingItems.get(i).get("PatternModel").equals("red")){
+                Outfit[1][0] =+ 1.;
+            }
+            if(ClothingItems.get(i).get("PatternModel").equals("green")){
+                Outfit[1][1] =+ 1.;
+            }
+            if(ClothingItems.get(i).get("PatternModel").equals("blue")){
+                Outfit[1][2] =+ 1.;
+            }
+            if(ClothingItems.get(i).get("PatternModel").equals("black")){
+                Outfit[1][3] =+ 1.;
+            }
+            if(ClothingItems.get(i).get("PatternModel").equals("white")){
+                Outfit[1][4] =+ 1.;
+            }
+        }
+
         ClothingItems = new ArrayList<Map<String,String>>();
         return this.Outfit;
     }
