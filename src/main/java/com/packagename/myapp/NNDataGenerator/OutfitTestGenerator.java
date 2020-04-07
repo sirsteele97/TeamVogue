@@ -3,6 +3,7 @@ package com.packagename.myapp.NNDataGenerator;
 import com.packagename.myapp.Services.DiscoveryClothesStorage;
 import com.packagename.myapp.Services.IBMClothesClassifier;
 import com.packagename.myapp.Services.Interfaces.IClothesStorage;
+import com.packagename.myapp.Utils.SessionData;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import org.apache.commons.io.IOUtils;
@@ -57,7 +58,7 @@ public class OutfitTestGenerator {
     }
 */
     public List<Map<String,String>> RunGenerator(IClothesStorage dcs)  {
-        Map<String, Map<String, String>> items = dcs.getClothes("", "");
+        Map<String, Map<String, String>> items = dcs.getClothes("", "", "", SessionData.getAttribute("Username"));
 
         for (Map<String,String> clothingItem: items.values()) {
             if(clothingItem.get("ClothModel").equals("short sleeve shirt")){
