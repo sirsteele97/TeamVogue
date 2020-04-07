@@ -142,7 +142,7 @@ public class OutfitSelectionView extends VerticalLayout {
         g.AddImages(clothes.get(outfitKeys[2]));
 
         //Mason added: gets outfit as double array and returns from the nn a string on outfit quality
-        String colorsMatchComment = neuralNetwork.judge(g.GetOutfit());
+        String colorsMatchComment = neuralNetwork.judge(g.GetOutfit()[0], g.GetOutfit()[1]);
         showOutfit.add(new Text(colorsMatchComment));
 
         showOutfit.add(new HtmlComponent("br"));

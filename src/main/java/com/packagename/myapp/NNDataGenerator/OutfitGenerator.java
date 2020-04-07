@@ -11,17 +11,17 @@ public class OutfitGenerator {
     List<Map<String,String>> ClothingItems;
     double[][] Outfit;
 
-    private int OutfitSize = 5;
+    private int OutfitSize = 6;
     private int ParameterSize = 2;
 
     public OutfitGenerator() {
         ClothingItems = new ArrayList<Map<String,String>>();
-        Outfit = new double[ParameterSize][6];
+        Outfit = new double[ParameterSize][OutfitSize];
     }
 
     public void InitializeOutfitArray(){
-        Outfit = new double[ParameterSize][6];
-        for(int i = 0; i < 3; i++){
+        Outfit = new double[ParameterSize][OutfitSize];
+        for(int i = 0; i < ParameterSize; i++){
             for(int j=0;j < OutfitSize; j++){
                 Outfit[i][j] =  0.;
             }

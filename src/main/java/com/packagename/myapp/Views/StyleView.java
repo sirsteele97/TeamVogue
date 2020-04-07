@@ -7,24 +7,16 @@ import com.packagename.myapp.Services.Interfaces.IClothesStorage;
 import com.packagename.myapp.Services.Interfaces.IImageStorage;
 import com.packagename.myapp.neuralNet.ClassifierNet;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Html;
-import com.vaadin.flow.component.HtmlComponent;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +27,7 @@ public class StyleView extends VerticalLayout {
 
     private IClothesStorage clothesStorageService;
     private IImageStorage imageStorageService;
-    private double[] OutfitMatrix;
+    private double[][] OutfitMatrix;
     private ClassifierNet neuralNetwork;
 
     public StyleView(@Autowired IClothesStorage clothesStorageService, @Autowired IImageStorage imageStorageService) {
@@ -97,7 +89,7 @@ public class StyleView extends VerticalLayout {
         a.setWidth("500px");
         a.addClickListener(e ->
         {
-            //neuralNetwork.backpropagation("good", OutfitMatrix , neuralNetwork.LEARNING_RATE);
+            neuralNetwork.backpropagation("good", OutfitMatrix , neuralNetwork.LEARNING_RATE);
             setup();
         });
         Button b = new Button("Neutral");
@@ -114,7 +106,7 @@ public class StyleView extends VerticalLayout {
         c.setWidth("500px");
         c.addClickListener(e ->
         {
-            //neuralNetwork.backpropagation("bad", OutfitMatrix, neuralNetwork.LEARNING_RATE);
+            neuralNetwork.backpropagation("bad", OutfitMatrix, neuralNetwork.LEARNING_RATE);
             setup();
         });
         Div space1 = new Div();
