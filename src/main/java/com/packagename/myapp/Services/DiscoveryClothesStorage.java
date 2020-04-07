@@ -24,7 +24,7 @@ public class DiscoveryClothesStorage implements IClothesStorage {
     private final String clothesCollection = "f2ee7a33-3dcd-42bc-81d5-431738ff9173";
     private final String clothesEnvironment = "100a78cb-2b22-4b88-922b-97b7a63b5a1d";
 
-    public Map<String,Map<String,String>> getClothes(String clothesParam, String colorParam, String username) {
+    public Map<String,Map<String,String>> getClothes(String clothesParam, String colorParam, String patternParam, String username) {
         Map<String,Map<String,String>> clothes = new HashMap<String,Map<String,String>>();
         if(username.isEmpty()){
             return clothes;
@@ -41,6 +41,9 @@ public class DiscoveryClothesStorage implements IClothesStorage {
         if(!colorParam.equalsIgnoreCase("")){
             filter += "ColorModel::"+colorParam+",";
         }
+        if(!patternParam.equalsIgnoreCase("")){
+            filter += "PatternModel::"+patternParam+",";
+        }
         filter += "Username::"+username;
 
         QueryOptions queryOptions = new QueryOptions.Builder(clothesEnvironment,clothesCollection)
@@ -53,6 +56,7 @@ public class DiscoveryClothesStorage implements IClothesStorage {
             clothingMap.put("ImageLink",doc.get("ImageLink").toString());
             clothingMap.put("ClothModel",doc.get("ClothModel").toString());
             clothingMap.put("ColorModel",doc.get("ColorModel").toString());
+            clothingMap.put("PatternModel",doc.get("PatternModel").toString());
             clothingMap.put("DeleteKey",doc.get("DeleteKey").toString());
 
             clothes.put(doc.getId(),clothingMap);

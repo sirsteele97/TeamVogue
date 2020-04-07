@@ -47,15 +47,22 @@ public class SampleClosetView extends VerticalLayout {
         ComboBox colorsSelect = new ComboBox("Color",colors);
         colorsSelect.setAllowCustomValue(false);
 
+        ArrayList<String> patterns = new ArrayList<String>();
+        patterns.add("");
+        patterns.addAll(Arrays.asList(ClothingOptions.patterns));
+        ComboBox patternSelect = new ComboBox("Pattern",patterns);
+        patternSelect.setAllowCustomValue(false);
+
         FlexLayout pictureArea = new FlexLayout();
         pictureArea.setWrapMode(FlexLayout.WrapMode.WRAP);
-        addImagesToDiv("","",pictureArea);
+        addImagesToDiv("","","",pictureArea);
 
         Button filterButton = new Button("Filter",e -> {
             pictureArea.removeAll();
             String clothesParam = (clothesSelect.getValue() != null) ? clothesSelect.getValue().toString() : "";
             String colorParam = (colorsSelect.getValue() != null) ? colorsSelect.getValue().toString() : "";
-            addImagesToDiv(clothesParam,colorParam,pictureArea);
+            String patternParam = (patternSelect.getValue() != null) ? patternSelect.getValue().toString() : "";
+            addImagesToDiv(clothesParam,colorParam,patternParam,pictureArea);
         });
         filterButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
@@ -63,14 +70,14 @@ public class SampleClosetView extends VerticalLayout {
         uploadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Div mainStuff = new Div();
-        mainStuff.add(clothesSelect, new Text(" "), colorsSelect, new Text(" "), filterButton, new Text(" "), uploadButton);
+        mainStuff.add(clothesSelect, new Text(" "), colorsSelect, new Text(" "), patternSelect, new Text(" "), filterButton, new Text(" "), uploadButton);
 
 
         add(new TopBar(),mainStuff,pictureArea);
     }
 
-    public void addImagesToDiv(String clothesParam, String colorParam, FlexLayout pictureArea){
-        Map<String,Map<String,String>> images = clothesStorageService.getClothes(clothesParam,colorParam,SessionData.getAttribute("Username"));
+    public void addImagesToDiv(String clothesParam, String colorParam, String patternParam, FlexLayout pictureArea){
+        Map<String,Map<String,String>> images = clothesStorageService.getClothes(clothesParam,colorParam,patternParam,SessionData.getAttribute("Username"));
         for(String imageId : images.keySet()){
             pictureArea.add(createClothingItem(imageId,images.get(imageId)));
         }
@@ -84,7 +91,7 @@ public class SampleClosetView extends VerticalLayout {
         image.setHeight("300px");
         closetItem.add(image);
         closetItem.add(new HtmlComponent("br"));
-        closetItem.add(new Text(imageAttributes.get("ColorModel")+" , "+imageAttributes.get("ClothModel")));
+        closetItem.add(new Text(imageAttributes.get("ColorModel")+" , "+imageAttributes.get("ClothModel")+" , "+imageAttributes.get("PatternModel")));
         closetItem.add(new HtmlComponent("br"));
         Button deleteButton = new Button("Delete",e->{
             clothesStorageService.deleteClothing(imageId);

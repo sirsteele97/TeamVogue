@@ -56,7 +56,7 @@ public class OutfitSelectionView extends VerticalLayout {
         pages = new ArrayList<Div>();
         currentPage = 0;
 
-        clothes = clothesStorageService.getClothes("","", SessionData.getAttribute("Username"));
+        clothes = clothesStorageService.getClothes("","","",SessionData.getAttribute("Username"));
         outfitKeys = new String[3];
 
         //Top selection screen

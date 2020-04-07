@@ -71,7 +71,6 @@ public class ImageUploadView extends VerticalLayout {
                 clothingDocument.put("ImageLink",uploadResults.get("ImageLink"));
                 clothingDocument.put("DeleteKey",uploadResults.get("DeleteKey"));
                 clothingDocument.put("Username", SessionData.getAttribute("Username"));
-                clothingDocument.put("Probability",".5");
 
                 createVerification(clothingDocument,mainStuff);
             } catch (IOException e) {
@@ -106,17 +105,27 @@ public class ImageUploadView extends VerticalLayout {
         colorsSelect.setValue(clothingDocument.get("ColorModel"));
         colorsSelect.setAllowCustomValue(false);
 
-        attributesEditArea.add(clothesSelect,colorsSelect);
+        ArrayList<String> patterns = new ArrayList<String>();
+        patterns.addAll(Arrays.asList(ClothingOptions.patterns));
+        ComboBox patternSelect = new ComboBox("Pattern",patterns);
+        patternSelect.setValue(clothingDocument.get("PatternModel"));
+        patternSelect.setAllowCustomValue(false);
+
+        attributesEditArea.add(clothesSelect,colorsSelect,patternSelect);
         parent.add(attributesEditArea);
 
         Button finishButton = new Button("Finish", e -> {
             String clothesParam = (clothesSelect.getValue() != null) ? clothesSelect.getValue().toString() : "";
             String colorParam = (colorsSelect.getValue() != null) ? colorsSelect.getValue().toString() : "";
+            String patternParam = (patternSelect.getValue() != null) ? patternSelect.getValue().toString() : "";
 
             clothingDocument.put("ClothModel",clothesParam);
             clothingDocument.put("ColorModel",colorParam);
+            clothingDocument.put("PatternModel",patternParam);
 
             String json = new Gson().toJson(clothingDocument);
+
+            System.out.println(patternParam+": "+json);
             clothesStorageService.addClothing(json);
 
             this.getUI().ifPresent(ui -> ui.navigate("closet"));
