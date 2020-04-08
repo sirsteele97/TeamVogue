@@ -24,30 +24,30 @@ public class DiscoveryClothesStorage implements IClothesStorage {
     private final String clothesCollection = "f2ee7a33-3dcd-42bc-81d5-431738ff9173";
     private final String clothesEnvironment = "100a78cb-2b22-4b88-922b-97b7a63b5a1d";
 
-    public Map<String,Map<String,String>> getClothes(String clothesParam, String colorParam) {
+    public Map<String,Map<String,String>> getClothes(String clothesParam, String colorParam, String patternParam, String username) {
         Map<String,Map<String,String>> clothes = new HashMap<String,Map<String,String>>();
+        if(username.isEmpty()){
+            return clothes;
+        }
 
         IamAuthenticator authenticator = new IamAuthenticator(key);
         Discovery discovery = new Discovery("2019-04-30",authenticator);
         discovery.setServiceUrl(url);
 
-        LinkedList<String> filters = new LinkedList<String>();
+        String filter = "";
         if(!clothesParam.equalsIgnoreCase("")){
-            filters.add("ClothModel::"+clothesParam);
+            filter += "ClothModel::"+clothesParam+",";
         }
         if(!colorParam.equalsIgnoreCase("")){
-            filters.add("ColorModel::"+colorParam);
+            filter += "ColorModel::"+colorParam+",";
         }
-
-        String filter = "";
-        for(int i=0;i<filters.size();i++){
-            filter += filters.get(i);
-            if(i != filters.size()-1)
-                filter +=", ";
+        if(!patternParam.equalsIgnoreCase("")){
+            filter += "PatternModel::"+patternParam+",";
         }
+        filter += "Username::"+username;
 
         QueryOptions queryOptions = new QueryOptions.Builder(clothesEnvironment,clothesCollection)
-                .query(filter).build();
+                .filter(filter).build();
         QueryResponse response = discovery.query(queryOptions).execute().getResult();
 
         List<QueryResult> results = response.getResults();
@@ -56,6 +56,7 @@ public class DiscoveryClothesStorage implements IClothesStorage {
             clothingMap.put("ImageLink",doc.get("ImageLink").toString());
             clothingMap.put("ClothModel",doc.get("ClothModel").toString());
             clothingMap.put("ColorModel",doc.get("ColorModel").toString());
+            clothingMap.put("PatternModel",doc.get("PatternModel").toString());
             clothingMap.put("DeleteKey",doc.get("DeleteKey").toString());
 
             clothes.put(doc.getId(),clothingMap);

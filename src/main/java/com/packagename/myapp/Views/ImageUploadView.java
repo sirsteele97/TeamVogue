@@ -6,6 +6,7 @@ import com.packagename.myapp.Services.Interfaces.IClothesClassifier;
 import com.packagename.myapp.Services.Interfaces.IClothesStorage;
 import com.packagename.myapp.Services.Interfaces.IImageStorage;
 import com.packagename.myapp.Utils.ClothingOptions;
+import com.packagename.myapp.Utils.SessionData;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -20,6 +21,7 @@ import com.vaadin.flow.router.Route;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -65,9 +67,10 @@ public class ImageUploadView extends VerticalLayout {
 
                 Map<String,String> uploadResults = imageStorageService.uploadImage(new ByteArrayInputStream(bytes),event.getFileName());
 
-                Map<String,String> clothingDocument = clothesClassifierService.getClothingAttributes(new ByteArrayInputStream(bytes));
+                Map<String,String> clothingDocument = clothesClassifierService.getClothingAttributes(uploadResults.get("ImageLink"));
                 clothingDocument.put("ImageLink",uploadResults.get("ImageLink"));
                 clothingDocument.put("DeleteKey",uploadResults.get("DeleteKey"));
+                clothingDocument.put("Username", SessionData.getAttribute("Username"));
 
                 createVerification(clothingDocument,mainStuff);
             } catch (IOException e) {
@@ -102,17 +105,27 @@ public class ImageUploadView extends VerticalLayout {
         colorsSelect.setValue(clothingDocument.get("ColorModel"));
         colorsSelect.setAllowCustomValue(false);
 
-        attributesEditArea.add(clothesSelect,colorsSelect);
+        ArrayList<String> patterns = new ArrayList<String>();
+        patterns.addAll(Arrays.asList(ClothingOptions.patterns));
+        ComboBox patternSelect = new ComboBox("Pattern",patterns);
+        patternSelect.setValue(clothingDocument.get("PatternModel"));
+        patternSelect.setAllowCustomValue(false);
+
+        attributesEditArea.add(clothesSelect,colorsSelect,patternSelect);
         parent.add(attributesEditArea);
 
         Button finishButton = new Button("Finish", e -> {
             String clothesParam = (clothesSelect.getValue() != null) ? clothesSelect.getValue().toString() : "";
             String colorParam = (colorsSelect.getValue() != null) ? colorsSelect.getValue().toString() : "";
+            String patternParam = (patternSelect.getValue() != null) ? patternSelect.getValue().toString() : "";
 
             clothingDocument.put("ClothModel",clothesParam);
             clothingDocument.put("ColorModel",colorParam);
+            clothingDocument.put("PatternModel",patternParam);
 
             String json = new Gson().toJson(clothingDocument);
+
+            System.out.println(patternParam+": "+json);
             clothesStorageService.addClothing(json);
 
             this.getUI().ifPresent(ui -> ui.navigate("closet"));

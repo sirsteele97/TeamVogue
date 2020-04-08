@@ -8,8 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * The entry point of the Spring Boot application.
@@ -19,23 +21,7 @@ public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws SQLException, SQLQueryException {
         KeyHolder.loadKeys();
-
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Type A to start the server, B to populate TestData!");
-        String s = sc.nextLine();
-        if(s.toUpperCase().equals("B")){
-            OutfitTestGenerator g = new OutfitTestGenerator();
-            System.out.println("Type path to the file with photos!");
-            s = sc.nextLine();
-            System.out.println("Type file index you wish to start at, if this is the first go type 0. (This is used if there was an error in processing files so " +
-                    "you didn't have to start from the first pic again.");
-            int i = Integer.parseInt(sc.nextLine());
-            g.RunGenerator(s, i);
-            g.PopulateTestArrays();
-            System.out.println("Generator is populated");
-        }else{
-            SpringApplication.run(Application.class, args);
-        }
+        SpringApplication.run(Application.class, args);
     }
 
 }

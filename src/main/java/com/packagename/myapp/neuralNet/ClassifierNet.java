@@ -1,18 +1,33 @@
 package com.packagename.myapp.neuralNet;
 
+import com.google.gson.Gson;
+
+import java.io.*;
+
 public class ClassifierNet {
+    public final double LEARNING_RATE = .01;
+
     NeuronCls[] firstlayer=new NeuronCls[3];
     NeuronCls[] secondlayer=new NeuronCls[1];
-    int inputNum=6;
+
+    //{solid, stripe, dot, plaid, icon}
+    double[] patternWeights = {0.01, 0.01, 0.01, 0.01, 0.01, 0.5};
+
     public ClassifierNet(){
-        double[] GB= {0.01,1.0,1.0,0.01,0.01,0.5};
-        double[] GR= {2.0,2.0,0.01,0.01,0.01,0.5};
-        double[] WB= {0.01,0.01,0.01,1.0,1.0,0.5};
-        double[] last ={1.0,-1.0,2.0,0.2};
+        Weights initialWeights = instantiateWeights();
+        //{red, green, blue, white, black, 0.5}
+        double[] GB= initialWeights.GB;
+        double[] GR= initialWeights.GR;
+        double[] WB= initialWeights.WB;
+
+        //last, not sure what its function is
+        double[] last = initialWeights.last;
+        patternWeights = initialWeights.patternWeights;
+
         firstlayer[0]=new NeuronCls(GB);
         firstlayer[1]=new NeuronCls(GR);
         firstlayer[2]=new NeuronCls(WB);
-        secondlayer[0]=new NeuronCls(last);
+        secondlayer[0] = new NeuronCls(last);
     }
 
     public double run(double[] colors){
@@ -23,10 +38,19 @@ public class ClassifierNet {
 
         return secondlayer[0].run(afterInput);
     }
-    public String judge(double[] colors){
+    public String judge(double[] colors, double[] patterns){
         String judgement;
-        double match=run(colors);
-        if(match<0.5){
+
+        //get color value
+        double match = run(colors);
+
+        //get pattern value
+        for(int i = 0; i < patterns.length; i++){
+            match += patterns[i] * patternWeights[i];
+        }
+
+        //output depending on model values
+        if(match<0){
             judgement="bad";
         }
         else if(match<3){
@@ -37,7 +61,8 @@ public class ClassifierNet {
         }
         return judgement;
     }
-    public void backpropagation(String desired, double[] inputs, double learning_rate){
+    public void backpropagation(String desired, double[][] datapoint, double learning_rate){
+        double[] inputs = datapoint[0];
         if(desired.equals("good")){
             for(int i=0;i<firstlayer.length;i++){
                 if(secondlayer[0].weights[i]>0){
@@ -52,7 +77,7 @@ public class ClassifierNet {
                 }
             }
         }
-        else{
+        else if (desired.equals("bad")){
             for(int i=0;i<firstlayer.length;i++){
                 if(secondlayer[0].weights[i]>0){
                     for(int j=0;j<firstlayer[i].weights.length-1;j++){
@@ -66,6 +91,52 @@ public class ClassifierNet {
                 }
             }
 
+        }
+
+        double[] patterns = datapoint[1];
+        if(desired.equals("good")) {
+            for(int i=0; i<patterns.length;i++){
+                patternWeights[i] += patterns[i] * learning_rate;
+            }
+        } else if(desired.equals("bad")){
+            for(int i=0; i<patterns.length;i++){
+                patternWeights[i] -= patterns[i] * learning_rate;
+            }
+        }
+
+        Weights updatedWeights = new Weights();
+        updatedWeights.GB = firstlayer[0].weights;
+        updatedWeights.GR = firstlayer[1].weights;
+        updatedWeights.WB = firstlayer[2].weights;
+        updatedWeights.last = secondlayer[0].weights;
+        updatedWeights.patternWeights = patternWeights;
+        storeWeights(updatedWeights);
+    }
+
+    /**
+     * JSON helper methods and class.
+     */
+    private Weights instantiateWeights() {
+        String filename = "src/main/java/com/packagename/myapp/neuralNet/trained_weights.json";
+        File temp = new File(filename);
+        Weights w = new Weights();
+        if(temp.exists()){
+            try(Reader reader = new FileReader(filename)){
+                Gson g = new Gson();
+                w = g.fromJson(reader,Weights.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return w;
+    }
+
+    private void storeWeights(Weights updatedWeights){
+        try (Writer writer = new FileWriter("src/main/java/com/packagename/myapp/neuralNet/trained_weights.json")){
+            Gson gson = new Gson();
+            gson.toJson(updatedWeights,Weights.class,writer);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
