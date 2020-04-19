@@ -19,6 +19,10 @@ public class OutfitGenerator {
         Outfit = new double[ParameterSize][OutfitSize];
     }
 
+    public void AddOutfit(List<Map<String,String>> outfit){
+        ClothingItems = outfit;
+    }
+
     public void InitializeOutfitArray(){
         Outfit = new double[ParameterSize][OutfitSize];
         for(int i = 0; i < ParameterSize; i++){
@@ -59,19 +63,19 @@ public class OutfitGenerator {
             }
 
         for(int i = 0; i < ClothingItems.size()-1; i++){
-            if(ClothingItems.get(i).get("PatternModel").equals("red")){
+            if(ClothingItems.get(i).get("PatternModel").equals("solid")){
                 Outfit[1][0] =+ 1.;
             }
-            if(ClothingItems.get(i).get("PatternModel").equals("green")){
+            if(ClothingItems.get(i).get("PatternModel").equals("stripe")){
                 Outfit[1][1] =+ 1.;
             }
-            if(ClothingItems.get(i).get("PatternModel").equals("blue")){
+            if(ClothingItems.get(i).get("PatternModel").equals("dot")){
                 Outfit[1][2] =+ 1.;
             }
-            if(ClothingItems.get(i).get("PatternModel").equals("black")){
+            if(ClothingItems.get(i).get("PatternModel").equals("plaid")){
                 Outfit[1][3] =+ 1.;
             }
-            if(ClothingItems.get(i).get("PatternModel").equals("white")){
+            if(ClothingItems.get(i).get("PatternModel").equals("icon")){
                 Outfit[1][4] =+ 1.;
             }
         }

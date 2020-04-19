@@ -3,6 +3,8 @@ package com.packagename.myapp.NNDataGenerator;
 import com.packagename.myapp.Services.DiscoveryClothesStorage;
 import com.packagename.myapp.Services.IBMClothesClassifier;
 import com.packagename.myapp.Services.Interfaces.IClothesStorage;
+import com.packagename.myapp.Services.Interfaces.IWeatherService;
+import com.packagename.myapp.Services.OpenWeatherService;
 import com.packagename.myapp.Utils.SessionData;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
@@ -72,6 +74,50 @@ public class OutfitTestGenerator {
             }else if(clothingItem.get("ClothModel").equals("pants")){
                 Pants.add(clothingItem);
             }else if(clothingItem.get("ClothModel").equals("dress")){
+                Dress.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("shoes")){
+                Shoes.add(clothingItem);
+            }
+        }
+
+        Random rand = new Random();
+        Random rand2 = new Random();
+        List<Map<String,String>> clothingItems = new ArrayList<Map<String,String>>();
+
+        if(rand2.nextInt(2) > 1 || Dress.isEmpty()){
+            if(!Shirts.isEmpty() && !Shoes.isEmpty() && !Pants.isEmpty()){
+                clothingItems.add(Shirts.get(rand.nextInt(Shirts.size())));
+                clothingItems.add(Pants.get(rand.nextInt(Pants.size())));
+                clothingItems.add(Shoes.get(rand.nextInt(Shoes.size())));
+            }
+        }else{
+            clothingItems.add(Dress.get(rand.nextInt(Shirts.size())));
+            clothingItems.add(Shoes.get(rand.nextInt(Shoes.size())));
+        }
+
+        return clothingItems;
+    }
+
+    public List<Map<String,String>> RunGeneratorWithWeather(IClothesStorage dcs)  {
+        Map<String, Map<String, String>> items = dcs.getClothes("", "", "", SessionData.getAttribute("Username"));
+
+        IWeatherService ws = new OpenWeatherService();
+        Map<String, String> weather =  ws.getWeather(SessionData.getAttribute("ZipCode"));
+
+        double temp = Double.valueOf(weather.get("Temp"));
+        boolean isCold = temp <= 45;
+        for (Map<String,String> clothingItem: items.values()) {
+            if(clothingItem.get("ClothModel").equals("short sleeve shirt") && !isCold){
+                Shirts.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("long sleeve shirt")){
+                Shirts.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("shorts") && !isCold){
+                Pants.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("skirt") && !isCold){
+                Pants.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("pants")){
+                Pants.add(clothingItem);
+            }else if(clothingItem.get("ClothModel").equals("dress") && !isCold){
                 Dress.add(clothingItem);
             }else if(clothingItem.get("ClothModel").equals("shoes")){
                 Shoes.add(clothingItem);

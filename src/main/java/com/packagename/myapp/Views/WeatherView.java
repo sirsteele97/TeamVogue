@@ -1,6 +1,7 @@
 package com.packagename.myapp.Views;
 
 import com.packagename.myapp.Components.TopBar;
+import com.packagename.myapp.NNDataGenerator.BestOutfitGenerator;
 import com.packagename.myapp.NNDataGenerator.OutfitGenerator;
 import com.packagename.myapp.NNDataGenerator.OutfitTestGenerator;
 import com.packagename.myapp.Services.Interfaces.IClothesStorage;
@@ -33,10 +34,12 @@ public class WeatherView extends VerticalLayout {
     private ClassifierNet neuralNetwork;
     private List<Map<String, String>> generatedOutfit;
     private String zipcode;
+    private BestOutfitGenerator BOG;
 
     public WeatherView(@Autowired IClothesStorage clothesStorageService, @Autowired IImageStorage imageStorageService) {
         this.clothesStorageService = clothesStorageService;
         this.imageStorageService = imageStorageService;
+        BOG = new BestOutfitGenerator(clothesStorageService);
         neuralNetwork = new ClassifierNet();
         setup();
     }
@@ -50,6 +53,7 @@ public class WeatherView extends VerticalLayout {
             OG.AddImages(generatedOutfit.get(2));
 
             //USE THIS TO GIVE TO NN TO EVALUATE CURRENT RATING
+            OG.AddOutfit(generatedOutfit);
             OutfitMatrix = OG.GetOutfit();
 
             //PICTURE
@@ -77,8 +81,8 @@ public class WeatherView extends VerticalLayout {
     public void setup(){
         super.removeAll();
 
-        OutfitTestGenerator OTG = new OutfitTestGenerator();
-        generatedOutfit = OTG.RunGenerator(clothesStorageService);
+
+        generatedOutfit = BOG.GetBestOutfit();
         TopBar topbar = new TopBar();
 
         //WEATHER, ZIPCODE STUFF
@@ -113,7 +117,7 @@ public class WeatherView extends VerticalLayout {
             a.addClickListener(e ->
             {
                 neuralNetwork.backpropagation("good", OutfitMatrix, neuralNetwork.LEARNING_RATE);
-                generatedOutfit = OTG.RunGenerator(clothesStorageService);
+                generatedOutfit = BOG.GetBestOutfit();
                 setup();
             });
             Button b = new Button("Neutral");
@@ -122,7 +126,7 @@ public class WeatherView extends VerticalLayout {
             b.setWidth("500px");
             b.addClickListener(e ->
             {
-                generatedOutfit = OTG.RunGenerator(clothesStorageService);
+                generatedOutfit = BOG.GetBestOutfit();
                 setup();
             });
             Button c = new Button("I dislike");
@@ -132,7 +136,7 @@ public class WeatherView extends VerticalLayout {
             c.addClickListener(e ->
             {
                 neuralNetwork.backpropagation("bad", OutfitMatrix, neuralNetwork.LEARNING_RATE);
-                generatedOutfit = OTG.RunGenerator(clothesStorageService);
+                generatedOutfit = BOG.GetBestOutfit();
                 setup();
             });
             Div space1 = new Div();

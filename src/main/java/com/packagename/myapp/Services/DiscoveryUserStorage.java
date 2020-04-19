@@ -7,6 +7,7 @@ import com.ibm.watson.discovery.v1.Discovery;
 import com.ibm.watson.discovery.v1.model.*;
 import com.packagename.myapp.Services.Interfaces.IUserStorage;
 import com.packagename.myapp.Utils.KeyHolder;
+import com.packagename.myapp.Utils.SessionData;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -87,6 +88,7 @@ public class DiscoveryUserStorage implements IUserStorage {
         List<QueryResult> results = response.getResults();
         for(QueryResult doc : results){
             if(BCrypt.checkpw(password,doc.get("Password").toString())){
+                SessionData.setAttribute("ZipCode", doc.get("ZipCode").toString());
                 return true;
             }
         }

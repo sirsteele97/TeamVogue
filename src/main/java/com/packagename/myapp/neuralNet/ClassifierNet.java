@@ -61,6 +61,21 @@ public class ClassifierNet {
         }
         return judgement;
     }
+
+    public double GetJudgeValue(double[] colors, double[] patterns){
+        String judgement;
+
+        //get color value
+        double match = run(colors);
+
+        //get pattern value
+        for(int i = 0; i < patterns.length; i++){
+            match += patterns[i] * patternWeights[i];
+        }
+
+        return match;
+    }
+
     public void backpropagation(String desired, double[][] datapoint, double learning_rate){
         double[] inputs = datapoint[0];
         if(desired.equals("good")){
