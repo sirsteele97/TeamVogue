@@ -23,6 +23,10 @@ public class TopBar extends Div {
         styleButton.addClickListener(e -> styleButton.getUI().ifPresent(ui->ui.navigate("style")));
         styleButton.setClassName("topBarButton");
 
+        Button weatherButton = new Button("Weather");
+        weatherButton.addClickListener(e -> weatherButton.getUI().ifPresent(ui->ui.navigate("weather")));
+        weatherButton.setClassName("topBarButton");
+
         Button signOutButton = new Button("Sign Out");
         signOutButton.addClickListener(e -> {
             SessionData.setAttribute("Username","");
@@ -30,7 +34,7 @@ public class TopBar extends Div {
         });
         signOutButton.setClassName("topBarButton");
 
-        add(closetButton, outfitButton, styleButton, signOutButton);
+        add(closetButton, outfitButton, styleButton, weatherButton, signOutButton);
     }
 
 }
