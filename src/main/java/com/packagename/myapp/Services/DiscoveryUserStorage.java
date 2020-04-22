@@ -118,4 +118,27 @@ public class DiscoveryUserStorage implements IUserStorage {
 
         return false;
     }
+
+    @Override
+    public String getUserZipCode(String username) {
+        if(username.isEmpty()){
+            return "";
+        }
+
+        IamAuthenticator authenticator = new IamAuthenticator(key);
+        Discovery discovery = new Discovery("2019-04-30",authenticator);
+        discovery.setServiceUrl(url);
+
+        String filter = "Username::"+username;
+        QueryOptions queryOptions = new QueryOptions.Builder(userEnvironment, userCollection)
+                .filter(filter).build();
+        QueryResponse response = discovery.query(queryOptions).execute().getResult();
+
+        List<QueryResult> results = response.getResults();
+        if(results.size() == 0) {
+            return "";
+        }
+
+        return results.get(0).get("ZipCode").toString();
+    }
 }

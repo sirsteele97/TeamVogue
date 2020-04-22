@@ -12,4 +12,5 @@ public interface IUserStorage {
 
     boolean userExists(String username);
 
+    String getUserZipCode(String username);
 }

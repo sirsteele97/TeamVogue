@@ -6,6 +6,7 @@ import com.packagename.myapp.NNDataGenerator.OutfitGenerator;
 import com.packagename.myapp.NNDataGenerator.OutfitTestGenerator;
 import com.packagename.myapp.Services.Interfaces.IClothesStorage;
 import com.packagename.myapp.Services.Interfaces.IImageStorage;
+import com.packagename.myapp.Utils.SessionData;
 import com.packagename.myapp.neuralNet.ClassifierNet;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -33,7 +34,6 @@ public class WeatherView extends VerticalLayout {
     private double[][] OutfitMatrix;
     private ClassifierNet neuralNetwork;
     private List<Map<String, String>> generatedOutfit;
-    private String zipcode;
     private BestOutfitGenerator BOG;
 
     public WeatherView(@Autowired IClothesStorage clothesStorageService, @Autowired IImageStorage imageStorageService) {
@@ -81,7 +81,6 @@ public class WeatherView extends VerticalLayout {
     public void setup(){
         super.removeAll();
 
-
         generatedOutfit = BOG.GetBestOutfit();
         TopBar topbar = new TopBar();
 
@@ -92,10 +91,10 @@ public class WeatherView extends VerticalLayout {
          * todo: get zip code from user account to populate String zipcode.
          *
          * */
-        zipcode = "";
+        String zipcode = SessionData.getAttribute("ZipCode");
         textZipCode.setValue(zipcode);
         Button updateZipCode = new Button("Update");
-        updateZipCode.addAttachListener(e -> {
+        updateZipCode.addClickListener(e -> {
             setZipCode(textZipCode.getValue());
         });
         FlexLayout zipcodeStuff = new FlexLayout();
@@ -157,6 +156,8 @@ public class WeatherView extends VerticalLayout {
     }
 
     private void setZipCode(String s) {
-        this.zipcode = s;
+        SessionData.setAttribute("ZipCode",s);
+        BOG = new BestOutfitGenerator(clothesStorageService);
+        setup();
     }
 }

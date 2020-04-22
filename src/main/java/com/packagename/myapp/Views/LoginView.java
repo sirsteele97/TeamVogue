@@ -36,6 +36,7 @@ public class LoginView extends VerticalLayout {
                     if(userStorage.validCredentials(username,password)) {
                         //Successful Login
                         SessionData.setAttribute("Username",username);
+                        SessionData.setAttribute("ZipCode",userStorage.getUserZipCode(username));
                         button.getUI().ifPresent(ui -> ui.navigate("closet"));
                     }
                     else{
